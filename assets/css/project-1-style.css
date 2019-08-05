@@ -1,3 +1,21 @@
-/* ANIMATIONS */
+/* styling for homepage */
+.jumbotron{
+    text-align: center;
+    background-color: grey;
+    color: skyblue;
+}
 
-/* MOBILE-FIRST */
+body{
+    background: #2e2d2d;
+    background: -webkit-linear-gradient(#2e2d2d, black, #2e2d2d);
+    background: -o-linear-gradient(#2e2d2d, black, #2e2d2d);
+    background: -moz-linear-gradient(#2e2d2d, black, #2e2d2d);
+    background: linear-gradient(#2e2d2d, black, #2e2d2d);
+}
+.card{
+    background-color: grey;
+    color: skyblue;
+}
+.btn{
+    background-color: fuchsia;
+}
