@@ -35,21 +35,15 @@
             <div class="card-header">Where To?</div>
             <div class="card-body">
               <form>
-                <label for="input-1">Name:</label>
+                <label for="state">State:</label>
+                <input type="text" id="state" placeholder="AZ">
                 <br>
-                <input type="text" id="name">
+                <label for="name">City:</label>
+                <input type="text" id="name" placeholder="Phoenix">
                 <br>
-                <label for="input-2">Dates:</label>
+                <label for="date">Dates:</label>
+                <input type="text" id="date" placeholder="08/20/2019">
                 <br>
-                <input type="text" id="date">
-                <br>
-                <label for="input-3">Price:</label>
-                <br>
-                <input type="text" id="price">
-                <br>
-                <label for="input-4">Number of People:</label>
-                <br>
-                <input type="text" id="number-people">
               </form>
               <br>
               <div class="btn">Search</div>
@@ -57,7 +51,24 @@
           </div>
         </div>
       </div>
+    <!-- End of container -->
     </div>
+
+
+    <!-- View contains trail cards -->
+    <div class="output-container" id="trailList">
+
+    <!-- End of output-container -->
+    </div>
+    
+    
+    <!-- Modal will display single-trail details -->
+    <div class="modal" id='trailModal'>
+
+    <!-- End of modal -->
+    </div>
+        
+
 <!-- testing animation stuffs -->
     <!-- <div class="right">
         <svg viewBox="0 0 320 300">
