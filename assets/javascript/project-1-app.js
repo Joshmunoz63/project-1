@@ -33,8 +33,8 @@ var lon = 0;
 
 //Functions -----------------------------------------
 function callOpenWeatherAPI() {
-    cityName = "Phoenix"
-    openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName +"&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
+    cityName = "College Station"
+    openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName +",us&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
     $.ajax({
         url: openWeatherQueryURL,
         method: "GET",
@@ -42,7 +42,7 @@ function callOpenWeatherAPI() {
     }).then(function (openWeatherAPICall) {
         lat = openWeatherAPICall.city.coord.lat;
         lon = openWeatherAPICall.city.coord.lon;
-        queryTrail(lat, lon);
+        
         console.log(openWeatherAPICall);
         console.log("Here is the weather forcast for: " + openWeatherAPICall.city.name); 
         console.log("Lat: " + lat);
@@ -52,6 +52,7 @@ function callOpenWeatherAPI() {
         for(var i = 0; i < openWeatherAPICall.list.length; i++) {
             console.log(" ");
             console.log(openWeatherAPICall.list[i].dt_txt);
+            checkWeatherConditions(openWeatherAPICall, i);
             console.log("Temp: " + openWeatherAPICall.list[i].main.temp);
             console.log("Max Temp: " + openWeatherAPICall.list[i].main.temp_max);
             console.log("Min Temp: " + openWeatherAPICall.list[i].main.temp_min);
@@ -59,9 +60,54 @@ function callOpenWeatherAPI() {
             console.log("Ground Level: " + openWeatherAPICall.list[i].main.grnd_level);
             console.log("Wind: " + openWeatherAPICall.list[i].wind.deg + " degrees");
             console.log("Wind Speed: " + openWeatherAPICall.list[i].wind.speed);
+            console.log("--End of record--");
             console.log(" ");
         }
     });
+}
+
+function checkWeatherConditions(openWeatherAPICall, i) {
+    if(openWeatherAPICall.list[i].main.temp > 100){
+        console.log("Please be cautious! It's over 100 degrees");
+    } else if(openWeatherAPICall.list[i].main.temp < 50) {
+        console.log("-----------------------");
+        console.log("Please be cautious! It's pretty cold outside!");
+        console.log("-----------------------");
+    }
+
+    if(openWeatherAPICall.list[i].main.temp_max > 100) {
+        console.log("-----------------------");
+        console.log("It might get over 100 degrees! Bring some water incase!");
+        console.log("-----------------------");
+    }
+
+    if(openWeatherAPICall.list[i].main.temp_min < 60) {
+        console.log("-----------------------");
+        console.log("It might be pretty cool outside. Bring a jacket just incase!");
+        console.log("-----------------------");
+    }
+
+    if(openWeatherAPICall.list[i].wind.speed > 20) {
+        console.log("-----------------------");
+        console.log("It's going to be pretty windy outside. Be careful driving!");
+        console.log("-----------------------");
+    }
+
+    switch(openWeatherAPICall.list[i].weather[0].main) {
+        case "Thunderstorm": 
+        console.log("Maybe not the best day to go hiking!");
+        break;
+
+        case "Rain": 
+        console.log("-----------------------");
+        console.log("Bring a rain coat!");
+        console.log("-----------------------");
+        break;
+
+        case "Snow": 
+        console.log("Don't forget your snow shoes!");
+        break;
+    }
 }
 
 function queryTrail(lat, lon) {
@@ -97,6 +143,11 @@ function queryTrail(lat, lon) {
 //Executable Code
 
 callOpenWeatherAPI();
+
+//Not sure how to make the queryTrail function standalone just yet.
+//queryTrail(lat, lon);
+
+
 //End of executable code
     
 });
