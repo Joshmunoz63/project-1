@@ -20,8 +20,6 @@ $(document).ready(function () {
 
     // AJAX call to Open Weather API to import weather data. (chance of rain, wind, humidity, etc.)
     function callOpenWeatherAPI() {
-        
-        // ***** Add logic to prevent *****/
 
         openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName +"&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
         $.ajax({
