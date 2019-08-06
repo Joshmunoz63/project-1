@@ -1,9 +1,9 @@
-# Flight Advisor
+# Hiking Advisor
 
 
 ### Overview
 
-This app suggests a flight based on the user's preference of destination, date, price range, etc.
+This app helps hikers choose a trail and date based on the user's destination, preferred date, weather conditions, etc.
 
 
 ### How to Use
@@ -16,6 +16,6 @@ This app suggests a flight based on the user's preference of destination, date, 
 
 
 ### Components
-- Skyscanner API
-- Open Weather API
+- Trail API(https://rapidapi.com/trailapi/api/trailapi)
+- Open Weather API(https://rapidapi.com/community/api/open-weather-map)
 - (to be added)
