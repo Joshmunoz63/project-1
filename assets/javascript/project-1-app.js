@@ -4,6 +4,14 @@
 
 // DOM //
 // Declare connections with DOM.
+$(document).on("click", "#search", init);
+
+function init(init) {
+    // stop page from refreshing
+    event.preventDefault();
+    
+    $("#sign-in").slideUp().fadeout();
+}
 
 
 // API CONFIGURATIONS //
