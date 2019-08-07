@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
-    // GLOBAL VARIABLES //
+    /*------------\
+    | GLOBAL VARS |
+    \------------*/
     var state = "";
     var cityName = "";
     var date = "";
@@ -17,6 +19,7 @@ $(document).ready(function () {
 
 
     //Functions -----------------------------------------
+    
 
     // AJAX call to Open Weather API to import weather data. (chance of rain, wind, humidity, etc.)
     function callOpenWeatherAPI() {
@@ -169,7 +172,9 @@ $(document).ready(function () {
     // DATA ENTRY EVENT HANDLERS //
     // Optional: Consider taking info such as intended activity/purpose.
 
-    // This function handles events where the  button is clicked.
+    /*------------------------\
+    | ON CLICK FOR SEARCH BTN |
+    \------------------------*/
     $('.btn').on('click', function (event) {
         event.preventDefault();
 
@@ -177,12 +182,43 @@ $(document).ready(function () {
         cityName = $('#name').val().trim();
         date = $('#date').val().trim();
 
+        
         // ***** ADD VALIDATION FUNCTIONS FOR ALL ENTRY ***** //
         console.log(cityName);
         callOpenWeatherAPI(cityName);
+
+        // search animation
+        $("#sign-in").animate({
+            opacity: 0,
+            top: '1000px'
+        },1000);
+
+        $(".jumbotron").animate({
+            opacity: 0,
+            bottom: '10000px'
+        },1000);
     });
     
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
+    
+    /*--------\
+    | ON LOAD |
+    \--------*/
+    // Sign in box animation
+    $("#sign-in").animate(
+        // FIRST ARG CSS PROPS
+        {
+            opacity: 1,
+            top: '0px'
+        },
+        // SECOND ARG TIME (MS)
+        1500);
 
+    $(".jumbotron").animate({
+        opacity: 1,
+        top: '0px'
+    },1000);    
 });
+
+
 

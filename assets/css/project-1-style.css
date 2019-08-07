@@ -1,4 +1,6 @@
-/* styling for homepage */
+/*---------------------\
+| STYLING FOR HOMEPAGE |
+\---------------------*/
 .jumbotron{
     text-align: center;
     background-color: grey;
@@ -6,11 +8,8 @@
 }
 
 body{
-    background: #2e2d2d;
-    background: -webkit-linear-gradient(#2e2d2d, black, #2e2d2d);
-    background: -o-linear-gradient(#2e2d2d, black, #2e2d2d);
-    background: -moz-linear-gradient(#2e2d2d, black, #2e2d2d);
-    background: linear-gradient(#2e2d2d, black, #2e2d2d);
+background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
+background-size: cover;
 }
 .card{
     background-color: grey;
@@ -18,4 +17,20 @@ body{
 }
 .btn{
     background-color: fuchsia;
+}
+
+/*--------\
+| ON LOAD |
+\--------*/
+/* this is for onload animations */
+#sign-in {
+    position: relative;
+    opacity: 0;
+    top: 1000px;
+}
+
+.jumbotron{
+    position: relative;
+    opacity: 0;
+    bottom: 1000px;
 }
