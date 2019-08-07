@@ -132,7 +132,7 @@ $(document).ready(function () {
                 console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
                 console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
                 // Singletracks.com has Trail widget if higher res pic is needed, but may need to show other info.
-                console.log('Length in miles: ' + data[j].url); // URL to profile page.
+                console.log('Profile page: ' + data[j].url); // URL to profile page.
                 console.log(' ');
             }
 
@@ -150,8 +150,28 @@ $(document).ready(function () {
     // Take reorganized data and output to display.
     // Optional: Allow resorting of output by specific attribute.
 
-    function renderCard() {
-        // Create cards and output them to DOM.
+    function renderCard(na, th, ra, le) {
+        // Create divs that contain trail info.
+        var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12 text-light');
+        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', na);
+        
+        // Create trail line items.
+        var thumbnail = $('<img>').addClass('image').attr('src', th);
+        var name = $('<h3>').addClass('header').text(na);
+        var length = $('<p>').addClass('length').text(le + ' mi.');
+        var rating = $('<p>').addClass('rating').text(ra + ' rating');
+
+
+        // ***** ADD FUNCTION THAT ADDRESSES TRAILS THAT ARE MISSING CERTAIN INFO ***** //
+        // THIS MAY INVOLVE CREATING AN OBJECT TO STORE AJAX RESPONSE.
+
+
+        // Append line items to container and wrapper.
+        $(cardWrap).append(thumbnail, name, length, rating);
+        $(cardCont).append(cardWrap);
+
+        // Append container to output.
+        $('#trailList').append(cardCont);
     }
 
 
@@ -169,7 +189,7 @@ $(document).ready(function () {
     // DATA ENTRY EVENT HANDLERS //
     // Optional: Consider taking info such as intended activity/purpose.
 
-    // This function handles events where the  button is clicked.
+    // This function handles events where the Submit button is clicked.
     $('.btn').on('click', function (event) {
         event.preventDefault();
 
@@ -182,6 +202,8 @@ $(document).ready(function () {
         callOpenWeatherAPI(cityName);
     });
     
+    // ***** ADD EVENT HANDLER FOR TRAIL CARD BEING CLICKED ***** //
+
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
 
 });
