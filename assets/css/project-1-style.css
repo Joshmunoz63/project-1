@@ -1,4 +1,6 @@
-/* styling for homepage */
+/*---------------------\
+| STYLING FOR HOMEPAGE |
+\---------------------*/
 .jumbotron{
     text-align: center;
     background-color: grey;
@@ -15,4 +17,20 @@ background-size: cover;
 }
 .btn{
     background-color: fuchsia;
+}
+
+/*--------\
+| ON LOAD |
+\--------*/
+/* this is for onload animations */
+#sign-in {
+    position: relative;
+    opacity: 0;
+    top: 1000px;
+}
+
+.jumbotron{
+    position: relative;
+    opacity: 0;
+    bottom: 1000px;
 }
