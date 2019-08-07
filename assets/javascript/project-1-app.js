@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
-    // GLOBAL VARIABLES //
+    /*------------\
+    | GLOBAL VARS |
+    \------------*/
     var state = "";
     var cityName = "";
     var date = "";
@@ -17,6 +19,7 @@ $(document).ready(function () {
 
 
     //Functions -----------------------------------------
+    
 
     // AJAX call to Open Weather API to import weather data. (chance of rain, wind, humidity, etc.)
     function callOpenWeatherAPI() {
@@ -68,13 +71,13 @@ $(document).ready(function () {
     
         if(openWeatherAPICall.list[i].main.temp_max > 100) {
             console.log("-----------------------");
-            console.log("It might get over 100 degrees! Bring some water incase!");
+            console.log("It might get over 100 degrees! Bring some water in case!");
             console.log("-----------------------");
         }
     
         if(openWeatherAPICall.list[i].main.temp_min < 60) {
             console.log("-----------------------");
-            console.log("It might be pretty cool outside. Bring a jacket just incase!");
+            console.log("It might be pretty cool outside. Bring a jacket just in case!");
             console.log("-----------------------");
         }
     
@@ -118,6 +121,11 @@ $(document).ready(function () {
             console.log('Type: '+ typeof data);
             console.log('');
 
+
+            // ***** ADD A FUNCTION THAT STORES AJAX RESPONSE IN AN OBJECT. ***** //
+            // THIS CAN ALSO REDUCE AJAX CALLS IF WE ALLOW USER TO REQUEST SORT/FILTER CHANGES.
+
+
             for (let j = 0; j < data.length; j++) {
                 // Call render function and pass trail data.
                 renderCard(data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
@@ -152,7 +160,7 @@ $(document).ready(function () {
 
     function renderCard(na, th, ra, le) {
         // Create divs that contain trail info.
-        var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12 text-light');
+        var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12');
         var cardWrap = $('<div>').addClass('card-wrapper').attr('id', na);
         
         // Create trail line items.
@@ -162,8 +170,7 @@ $(document).ready(function () {
         var rating = $('<p>').addClass('rating').text(ra + ' rating');
 
 
-        // ***** ADD FUNCTION THAT ADDRESSES TRAILS THAT ARE MISSING CERTAIN INFO ***** //
-        // THIS MAY INVOLVE CREATING AN OBJECT TO STORE AJAX RESPONSE.
+        // ***** ADD FUNCTION THAT ADDRESSES MISSING INFO (e.g. Thumbnail) ***** //
 
 
         // Append line items to container and wrapper.
@@ -190,6 +197,9 @@ $(document).ready(function () {
     // Optional: Consider taking info such as intended activity/purpose.
 
     // This function handles events where the Submit button is clicked.
+    /*------------------------\
+    | ON CLICK FOR SEARCH BTN |
+    \------------------------*/
     $('.btn').on('click', function (event) {
         event.preventDefault();
 
@@ -197,14 +207,60 @@ $(document).ready(function () {
         cityName = $('#name').val().trim();
         date = $('#date').val().trim();
 
+        
         // ***** ADD VALIDATION FUNCTIONS FOR ALL ENTRY ***** //
+
+
         console.log(cityName);
         callOpenWeatherAPI(cityName);
+
+        // search animation
+        $("#sign-in").animate({
+            opacity: 0,
+            top: '1000px'
+        },1000);
+
+        $(".jumbotron").animate({
+            opacity: 0,
+            bottom: '10000px'
+        },1000);
     });
     
-    // ***** ADD EVENT HANDLER FOR TRAIL CARD BEING CLICKED ***** //
+    
+    /*-----------------------\
+    | ON CLICK OF TRAIL CARD |
+    \-----------------------*/
+
+    $(document.body).on('click', '.card-wrapper', function (event) {
+        event.preventDefault();
+
+        let trailName = $(this).attr('id');
+        console.log(trailName);
+
+    });
+
 
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
+    
+    
+    /*--------\
+    | ON LOAD |
+    \--------*/
+    // Sign in box animation
+    $("#sign-in").animate(
+        // FIRST ARG CSS PROPS
+        {
+            opacity: 1,
+            top: '0px'
+        },
+        // SECOND ARG TIME (MS)
+        1500);
 
+    $(".jumbotron").animate({
+        opacity: 1,
+        top: '0px'
+    },1000);    
 });
+
+
 
