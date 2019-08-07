@@ -10,6 +10,11 @@
 body{
 background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
 background-size: cover;
+
+/* Prevent tiling/clipping */
+height: 100vh;
+background-repeat: space;
+background-position: center;
 }
 .card{
     background-color: grey;
