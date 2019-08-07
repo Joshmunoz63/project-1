@@ -7,6 +7,7 @@ $(document).ready(function () {
     var cityName = "";
     var date = "";
 
+    var geocodeURL = "";
     var openWeatherQueryURL = "";
     var trailAPIQueryURL = "";
     var lat = 0;
@@ -19,24 +20,50 @@ $(document).ready(function () {
 
 
     //Functions -----------------------------------------
+
+    // AJAX call to Google Maps Javascript API's geocoder class to get latitude & longitude based on State and City.
+    function queryGeocode() {
+        // 'state' can be either acronym or full name.
+        geocodeURL = 'https://maps.googleapis.com/maps/api/geocode/json?components=administrative_area:' + state + '|locality:' + cityName + '&key=AIzaSyB3Cm2EiWanz2vvfkcmsSjabHVnJmqgL4s';
+
+        $.ajax({
+            url: geocodeURL,
+            crossDomain: true,
+            success: function (geoData) {
+                lat = geoData.results[0].geometry.location.lat;
+                lon = geoData.results[0].geometry.location.lng;
     
+                console.log(geoData);
+                console.log('Latitude obtained: ' + lat);
+                console.log('Longitude obtained: ' + lon);
+                console.log('');
+
+                console.log('Calling weather API now...')
+                callOpenWeatherAPI();
+
+                console.log('Calling trail API now...')
+                queryTrail();        
+            }
+        });
+    }
+
 
     // AJAX call to Open Weather API to import weather data. (chance of rain, wind, humidity, etc.)
     function callOpenWeatherAPI() {
         
-        // ***** Add logic to prevent *****/
+        //openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
+        openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
 
-        openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
         $.ajax({
             url: openWeatherQueryURL,
             method: "GET",
             crossDomain: true,
         }).then(function (openWeatherAPICall) {
-            lat = openWeatherAPICall.city.coord.lat;
-            lon = openWeatherAPICall.city.coord.lon;
+            // lat = openWeatherAPICall.city.coord.lat;
+            // lon = openWeatherAPICall.city.coord.lon;
             
             // ***** Rewrite later to separate this from this ajax call. Current has scope issue. ***** //
-            queryTrail(lat, lon);
+            //test queryTrail(lat, lon);
 
             console.log(openWeatherAPICall);
             console.log("Here is the weather forcast for: " + openWeatherAPICall.city.name); 
@@ -105,7 +132,11 @@ $(document).ready(function () {
     }
 
     // Make AJAX call to Find Bike Trails endpoint to import 
-    function queryTrail(lat, lon) {
+    function queryTrail() {
+        console.log('Trail API received latitude of: ' + lat);
+        console.log('Trail API received longitude of: ' + lon);
+        console.log('');
+
         trailAPIQueryURL = "https://trailapi-trailapi.p.rapidapi.com/trails/explore/?lat=" + lat +"&lon=" + lon;
         $.ajax({
             url: trailAPIQueryURL,
@@ -188,7 +219,6 @@ $(document).ready(function () {
     // Optional: Get/set some query data in database for persistence/tracking.
     
 
-
     //End of Functions -----------------------------------------        
 
 
@@ -207,12 +237,12 @@ $(document).ready(function () {
         cityName = $('#name').val().trim();
         date = $('#date').val().trim();
 
-        
+
         // ***** ADD VALIDATION FUNCTIONS FOR ALL ENTRY ***** //
 
 
-        console.log(cityName);
-        callOpenWeatherAPI(cityName);
+        // Geocode AJAX call is made only when search button is clicked, so we can sequentially call other AJAX calls from within.
+        queryGeocode();
 
         // search animation
         $("#sign-in").animate({
@@ -242,7 +272,7 @@ $(document).ready(function () {
 
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     
-    
+
     /*--------\
     | ON LOAD |
     \--------*/
