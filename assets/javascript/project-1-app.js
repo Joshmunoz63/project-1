@@ -5,7 +5,7 @@ $(document).ready(function () {
     \------------*/
     var state = "";
     var cityName = "";
-    var date = "";
+    var userInputDate = "";
 
     var geocodeURL = "";
     var openWeatherQueryURL = "";
@@ -72,17 +72,26 @@ $(document).ready(function () {
             
             for(var i = 0; i < openWeatherAPICall.list.length; i++) {
                 console.log(" ");
-                console.log(openWeatherAPICall.list[i].dt_txt);
-                checkWeatherConditions(openWeatherAPICall, i);
-                console.log("Temp: " + openWeatherAPICall.list[i].main.temp);
-                console.log("Max Temp: " + openWeatherAPICall.list[i].main.temp_max);
-                console.log("Min Temp: " + openWeatherAPICall.list[i].main.temp_min);
-                console.log("Conditions: " + openWeatherAPICall.list[i].weather[0].main);
-                console.log("Ground Level: " + openWeatherAPICall.list[i].main.grnd_level);
-                console.log("Wind: " + openWeatherAPICall.list[i].wind.deg + " degrees");
-                console.log("Wind Speed: " + openWeatherAPICall.list[i].wind.speed);
-                console.log("--End of record--");
-                console.log(" ");
+                
+                var timeANDdate = openWeatherAPICall.list[i].dt_txt;
+                var time = timeANDdate.slice(11);
+                var date = timeANDdate.slice(0,10);
+        
+                if((time == "00:00:00") || (time == "03:00:00") || (time == "00:00:00") || (time == "21:00:00")) {
+                    console.log("Too early/late");
+                } else {
+                    console.log(openWeatherAPICall.list[i].dt_txt);
+                    checkWeatherConditions(openWeatherAPICall, i);
+                    console.log("Temp: " + openWeatherAPICall.list[i].main.temp);
+                    console.log("Max Temp: " + openWeatherAPICall.list[i].main.temp_max);
+                    console.log("Min Temp: " + openWeatherAPICall.list[i].main.temp_min);
+                    console.log("Conditions: " + openWeatherAPICall.list[i].weather[0].main);
+                    console.log("Ground Level: " + openWeatherAPICall.list[i].main.grnd_level);
+                    console.log("Wind: " + openWeatherAPICall.list[i].wind.deg + " degrees");
+                    console.log("Wind Speed: " + openWeatherAPICall.list[i].wind.speed);
+                    console.log("--End of record--");
+                    console.log(" ");
+                }
             }
         });
     }
@@ -163,6 +172,7 @@ $(document).ready(function () {
                 // Optional: Write a function that stores data in an object first.
 
                 // Output data to console.
+                console.log("State: " + data[j].region);
                 console.log('Description: ' + data[j].description);
                 console.log('Difficulty: ' + data[j].difficulty);
                 console.log('Singletracks ID: ' + data[j].id);
@@ -184,6 +194,26 @@ $(document).ready(function () {
     // Filter, evaluate and reorganize data before rendering.
 
 
+    //Date validation
+    function validateDate(userInputDate) {
+        var currentDate = moment();
+        var currentDatePlus5 = moment(currentDate).add(5,"days");
+        userInputDate = moment(userInputDate, "YYYY/MM/DD");
+        console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
+        console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
+        console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
+        var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
+        console.log(checkInBetween);
+
+        if(checkInBetween == true) {
+            console.log("True!");
+            callOpenWeatherAPI(cityName);
+            $("#date").removeClass("is-invalid");
+        } else {
+            console.log("False!");
+            $("#date").addClass("is-invalid");
+        }
+    }
 
     // SUGGEST & RENDER FUNCTION //
     // Take reorganized data and output to display.
@@ -235,7 +265,7 @@ $(document).ready(function () {
 
         state = $('#state').val().trim();
         cityName = $('#name').val().trim();
-        date = $('#date').val().trim();
+        userInputDate = $('#date').val().trim();
 
 
         // ***** ADD VALIDATION FUNCTIONS FOR ALL ENTRY ***** //
