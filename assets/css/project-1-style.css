@@ -10,6 +10,11 @@
 body{
 background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
 background-size: cover;
+
+/* Prevent tiling/clipping */
+height: 100vh;
+background-repeat: space;
+background-position: center;
 }
 .card{
     background-color: grey;
@@ -17,6 +22,24 @@ background-size: cover;
 }
 .btn{
     background-color: fuchsia;
+}
+#trailList {
+    color:mediumblue;
+}
+.card-wrapper {
+    background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid antiquewhite; 
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+}  
+.image {
+width: 100%;
+max-height: 110px;
+margin-bottom: 1rem;
+overflow: hidden;
 }
 
 /*--------\
