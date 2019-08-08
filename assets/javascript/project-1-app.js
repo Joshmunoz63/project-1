@@ -12,7 +12,8 @@ $(document).ready(function () {
     var trailAPIQueryURL = "";
     var lat = 0;
     var lon = 0;
-    var trails = {};
+    var weatherData = {};
+    var trailsData = {};
 
 
     // DOM //
@@ -62,8 +63,8 @@ $(document).ready(function () {
             // lat = openWeatherAPICall.city.coord.lat;
             // lon = openWeatherAPICall.city.coord.lon;
             
-            // ***** Rewrite later to separate this from this ajax call. Current has scope issue. ***** //
-            //test queryTrail(lat, lon);
+            // testing storage
+            weatherData = openWeatherAPICall;
 
             console.log(openWeatherAPICall);
             console.log("Here is the weather forcast for: " + openWeatherAPICall.city.name); 
@@ -138,7 +139,11 @@ $(document).ready(function () {
         console.log('');
 
         trailAPIQueryURL = "https://trailapi-trailapi.p.rapidapi.com/trails/explore/?lat=" + lat +"&lon=" + lon;
+        
         $.ajax({
+            // testing async
+            async: false,
+
             url: trailAPIQueryURL,
             method: 'GET',
             headers: {
@@ -148,6 +153,11 @@ $(document).ready(function () {
         }).then(function (response) {
             console.log(response);
             var data = response.data;
+            
+            // testing storage
+            trailsData = data;
+            console.log(trailsData);
+            
             console.log('Response length: ' + data.length);
             console.log('Type: '+ typeof data);
             console.log('');
@@ -163,6 +173,7 @@ $(document).ready(function () {
                 // Optional: Write a function that stores data in an object first.
 
                 // Output data to console.
+                console.log('Object key: ' + j);
                 console.log('Description: ' + data[j].description);
                 console.log('Difficulty: ' + data[j].difficulty);
                 console.log('Singletracks ID: ' + data[j].id);
@@ -187,8 +198,9 @@ $(document).ready(function () {
 
     // SUGGEST & RENDER FUNCTION //
     // Take reorganized data and output to display.
-    // Optional: Allow resorting of output by specific attribute.
+    // Optional: Allow re-sorting of output by specific attribute.
 
+    // Call this to render trail cards.
     function renderCard(na, th, ra, le) {
         // Create divs that contain trail info.
         var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12');
@@ -213,6 +225,10 @@ $(document).ready(function () {
     }
 
 
+    // Call this to render a trail modal.
+    function renderModal() {
+
+    }
 
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
