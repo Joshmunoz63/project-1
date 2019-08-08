@@ -1,4 +1,6 @@
-/* styling for homepage */
+/*---------------------\
+| STYLING FOR HOMEPAGE |
+\---------------------*/
 .jumbotron{
     text-align: center;
     background-color: grey;
@@ -6,11 +8,13 @@
 }
 
 body{
-    background: #2e2d2d;
-    background: -webkit-linear-gradient(#2e2d2d, black, #2e2d2d);
-    background: -o-linear-gradient(#2e2d2d, black, #2e2d2d);
-    background: -moz-linear-gradient(#2e2d2d, black, #2e2d2d);
-    background: linear-gradient(#2e2d2d, black, #2e2d2d);
+background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
+background-size: cover;
+
+/* Prevent tiling/clipping */
+height: 100vh;
+background-repeat: space;
+background-position: center;
 }
 .card{
     background-color: grey;
@@ -18,4 +22,38 @@ body{
 }
 .btn{
     background-color: fuchsia;
+}
+#trailList {
+    color:mediumblue;
+}
+.card-wrapper {
+    background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid antiquewhite; 
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+}  
+.image {
+width: 100%;
+max-height: 110px;
+margin-bottom: 1rem;
+overflow: hidden;
+}
+
+/*--------\
+| ON LOAD |
+\--------*/
+/* this is for onload animations */
+#sign-in {
+    position: relative;
+    opacity: 0;
+    top: 1000px;
+}
+
+.jumbotron{
+    position: relative;
+    opacity: 0;
+    bottom: 1000px;
 }
