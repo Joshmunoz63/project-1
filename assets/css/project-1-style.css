@@ -3,8 +3,8 @@
 \---------------------*/
 .jumbotron{
     text-align: center;
-    background-color: grey;
-    color: skyblue;
+    background-color:whitesmoke;
+    color: black;
 }
 
 body{
@@ -17,11 +17,11 @@ background-repeat: space;
 background-position: center;
 }
 .card{
-    background-color: grey;
-    color: skyblue;
+    background-color:whitesmoke;
+    color: black;
 }
 .btn{
-    background-color: fuchsia;
+    background-color: rgb(219, 41, 41);
 }
 #trailList {
     color:mediumblue;
