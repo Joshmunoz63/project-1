@@ -201,27 +201,6 @@ $(document).ready(function () {
     // Filter, evaluate and reorganize data before rendering.
 
 
-    //Date validation
-    function validateDate(userInputDate) {
-        var currentDate = moment();
-        var currentDatePlus5 = moment(currentDate).add(5,"days");
-        userInputDate = moment(userInputDate, "YYYY/MM/DD");
-        console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
-        console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
-        console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
-        var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
-        console.log(checkInBetween);
-
-        if(checkInBetween == true) {
-            console.log("True!");
-            callOpenWeatherAPI(cityName);
-            $("#date").removeClass("is-invalid");
-        } else {
-            console.log("False!");
-            $("#date").addClass("is-invalid");
-        }
-    }
-
     // SUGGEST & RENDER FUNCTION //
     // Take reorganized data and output to display.
     // Optional: Allow re-sorting of output by specific attribute.
@@ -286,18 +265,38 @@ $(document).ready(function () {
 
 
         // Geocode AJAX call is made only when search button is clicked, so we can sequentially call other AJAX calls from within.
-        queryGeocode();
+        
+        var currentDate = moment();
+        var currentDatePlus5 = moment(currentDate).add(5,"days");
+        userInputDate = moment(userInputDate, "YYYY/MM/DD");
+        console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
+        console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
+        console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
+        var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
+        console.log(checkInBetween);
+
+        if(checkInBetween == true) {
+            console.log("True!");
+
+            $("#sign-in").animate({
+                opacity: 0,
+                top: '1000px'
+            },1000);
+    
+            $(".jumbotron").animate({
+                opacity: 0,
+                bottom: '10000px'
+            },1000);
+
+            queryGeocode();
+            $("#date").removeClass("is-invalid");
+        } else {
+            console.log("False!");
+            $("#date").addClass("is-invalid");
+        }
 
         // search animation
-        $("#sign-in").animate({
-            opacity: 0,
-            top: '1000px'
-        },1000);
-
-        $(".jumbotron").animate({
-            opacity: 0,
-            bottom: '10000px'
-        },1000);
+        
     });
     
     
