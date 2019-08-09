@@ -230,13 +230,6 @@ $(document).ready(function () {
     }
 
 
-    // Call this to render a trail modal.
-    function renderModal(key) {
-        
-        
-        $('#trailModal');
-    }
-
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
     // Optional: Get/set some query data in database for persistence/tracking.
@@ -304,17 +297,42 @@ $(document).ready(function () {
     | ON CLICK OF TRAIL CARD |
     \-----------------------*/
 
+    // Populate and display a trail modal.
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
 
-        // let trailName = $(this).attr('id');
-        // console.log(trailName);
+        let id = $(this).attr('id');
+        console.log(trailsData[id]);
+        let modalData = trailsData[id];
 
-        let 
+        //test $('#trailModal').empty();
+        $('#trailContent').empty();
+        
+        let thumb = $('<img>').attr('src', modalData.thumbnail);
+        let name = $('<h3>').text(modalData.name);
+        let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
+        let desc = $('<p>').text('Description: ' + modalData.description);
+        let dir = $('<p>').text('Directions: ' + modalData.directions);
+        let site = $('<a>').attr('href', modalData.url).text(modalData.url);
 
+        $('#trailContent').append(thumb, name, diff, desc, dir, site);
+
+        $('#trailModal').show();
     });
 
+    // When the user clicks outside of the modal, close modal.
+    window.onclick = function (event) {
+        var modal = $('#trailModal')[0];
+        // console.log(modal);
+        // console.log(event.target);
+        // Consider: $(event.target)
+        if (event.target == modal) {
+        // modal.style.display = 'none';
+        $('#trailModal').hide();
+        }
+    }
 
+    
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     
 
