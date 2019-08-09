@@ -150,9 +150,7 @@ $(document).ready(function () {
         trailAPIQueryURL = "https://trailapi-trailapi.p.rapidapi.com/trails/explore/?lat=" + lat +"&lon=" + lon;
         
         $.ajax({
-            // testing async
             async: false,
-
             url: trailAPIQueryURL,
             method: 'GET',
             headers: {
@@ -160,13 +158,11 @@ $(document).ready(function () {
                 "x-rapidapi-key": "cfbae3bd13msh660a849870aa5cap194a7fjsnd973bfb99523"
             }
         }).then(function (response) {
-            console.log(response);
             var data = response.data;
-            
-            // testing storage
             trailsData = data;
-            console.log(trailsData);
-            
+
+            console.log(response);
+            console.log(trailsData);            
             console.log('Response length: ' + data.length);
             console.log('Type: '+ typeof data);
             console.log('');
@@ -178,7 +174,7 @@ $(document).ready(function () {
 
             for (let j = 0; j < data.length; j++) {
                 // Call render function and pass trail data.
-                renderCard(data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
+                renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
                 // Optional: Write a function that stores data in an object first.
 
                 // Output data to console.
@@ -231,10 +227,10 @@ $(document).ready(function () {
     // Optional: Allow re-sorting of output by specific attribute.
 
     // Call this to render trail cards.
-    function renderCard(na, th, ra, le) {
+    function renderCard(ke, na, th, ra, le) {
         // Create divs that contain trail info.
         var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12');
-        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', na);
+        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', ke);
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
@@ -256,8 +252,10 @@ $(document).ready(function () {
 
 
     // Call this to render a trail modal.
-    function renderModal() {
-
+    function renderModal(key) {
+        
+        
+        $('#trailModal');
     }
 
     // Optional: STORAGE FUNCTION //
@@ -310,8 +308,10 @@ $(document).ready(function () {
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
 
-        let trailName = $(this).attr('id');
-        console.log(trailName);
+        // let trailName = $(this).attr('id');
+        // console.log(trailName);
+
+        let 
 
     });
 
