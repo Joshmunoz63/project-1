@@ -223,6 +223,8 @@ $(document).ready(function () {
 
 
 
+
+
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
     // Optional: Get/set some query data in database for persistence/tracking.
@@ -282,6 +284,10 @@ $(document).ready(function () {
         }
 
         // search animation
+        $("#na").animate({
+            opacity: 1,
+            top: '0px'
+        },2000);   
         
     });
     
@@ -318,7 +324,9 @@ $(document).ready(function () {
     $(".jumbotron").animate({
         opacity: 1,
         top: '0px'
-    },1000);    
+    },1000);   
+    
+
 });
 
 

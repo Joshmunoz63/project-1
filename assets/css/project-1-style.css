@@ -5,11 +5,38 @@
     text-align: center;
     background-color:whitesmoke;
     color: black;
+    font-family: 'Staatliches', cursive;
+    border-radius: 0;
+    padding: 1%;
+}
+
+.col-lg-12{
+    padding: 0;
+}
+
+.card{
+    outline: 3px;
+    outline-style: solid;
+    outline-color: rgb(52, 53, 53);
+    border-radius: 0;
+}
+
+h1{
+    font-size: 80px;
+}
+
+h4{
+    font-size: 30px;
+}
+
+.card{
+    font-family: 'Lexend Giga', sans-serif;
 }
 
 body{
 background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
 background-size: cover;
+border-radius: 0;
 
 /* Prevent tiling/clipping */
 height: 100vh;
@@ -21,20 +48,38 @@ background-position: center;
     color: black;
 }
 .btn{
-    background-color: rgb(219, 41, 41);
+    background-color: rgb(32, 121, 255);
+    color: white;
+    border: 2px solid rgb(0, 84, 211);
 }
+
+.btn:hover {
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.24), 0 10px 20px 0 rgba(0,0,0,0.19);
+    background-color: rgb(255, 0, 55);
+}
+
+/*---------------------------\
+| STYLING FOR SEARCH RESULTS |
+\---------------------------*/
 #trailList {
     color:mediumblue;
 }
 .card-wrapper {
     background: rgb(255, 255, 255); /* The Fallback */
     background: rgba(255, 255, 255, 0.8);
-    border: 1px solid antiquewhite; 
+    border: 2px solid black; 
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 30px;
     box-sizing: border-box;
-}  
+    color: black;
+    font-family: 'Lexend Giga', sans-serif;
+}
+
+.header{
+    font-size: 25px;
+}
+
 .image {
 width: 100%;
 max-height: 110px;
@@ -56,4 +101,13 @@ overflow: hidden;
     position: relative;
     opacity: 0;
     bottom: 1000px;
+}
+
+/*----------------\
+| SEARCH ANIMATION|
+\----------------*/
+#na{
+    position: relative;
+    opacity: 0;
+    top: 10000px;
 }

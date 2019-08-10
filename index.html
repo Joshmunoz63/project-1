@@ -15,6 +15,8 @@
     <!-- Moment.js Reference -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Archivo+Black|Lexend+Exa|Lexend+Giga|Oswald|Rubik|Staatliches|Viga&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="./assets/css/project-1-style.css"/>
@@ -22,10 +24,14 @@
 
   <body>
     <!-- this is the header --> 
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Hiking Advisor</h1>
-        <h4>Going hiking? We'll help you choose a trail and date.</h4>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12" >
+          <div class="jumbotron">
+            <h1>Hiking Advisor</h1>
+            <h4>Going hiking? We'll help you choose a trail and date.</h4>
+          </div>
+        </div>
       </div>
     </div>
     <!-- this is the form on the homepage -->
@@ -37,28 +43,28 @@
             <div class="card-body">
               <form>
                 <div class="row">
-                  <div class="col-lg-6">
+                  <div class="col-lg-8 col-md-4 col-sm-3">
                       <label for="state">State:</label>
                       <input class="form-control" type="text" id="state" placeholder="AZ">
                   </div>
                 </div>
                 <br>
                 <div class="row">
-                  <div class="col-lg-6">
+                  <div class="col-lg-8 col-md-4 col-sm-3">
                       <label for="name">City:</label>
                       <input class="form-control" type="text" id="name" placeholder="Phoenix">
                   </div>
                 </div>
                 <br>
                 <div class="row">
-                  <div class="col-lg-6">
+                  <div class="col-lg-8 col-md-4 col-sm-3">
                       <label for="date">Dates:</label>
                       <input class="form-control" type="date" id="date" placeholder="08/20/2019">
                   </div>
                 </div>
                 <br>
               </form>
-              <button type="submit" class="btn btn-primary" id="search">Search</button>
+              <button type="submit" class="btn btn-primary" id="search">Search🔎</button>
             </div>
           </div>
         </div>
@@ -75,10 +81,9 @@
     </div>
     
     <!-- Modal will display single-trail details -->
-    <div class="modal" id='trailModal'>
 
-    <!-- End of modal -->
-    </div>
+
+
         
 
 <!-- our script links -->
