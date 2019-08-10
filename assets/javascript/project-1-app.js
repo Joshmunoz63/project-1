@@ -14,8 +14,27 @@ $(document).ready(function () {
     var lon = 0;
     var weatherData = {};
     var trailsData = {};
+    var savedarray;
+    var sixAM;
+    var nineAM;
+    var twelvePM;
+    var threePM;
+    var sixPM;
 
+    var day1;
+    var day2;
+    var day3;
+    var day4;
+    var day5;
 
+    var day1Forcast;
+    var day2Forcast;
+    var day3Forcast;
+    var day4Forcast;
+    var day5Forcast;
+
+    var holdFilterHours = [];
+    var dataForUse = [];
     // DOM //
     // Declare connections with DOM as needed.
 
@@ -33,7 +52,7 @@ $(document).ready(function () {
             success: function (geoData) {
                 lat = geoData.results[0].geometry.location.lat;
                 lon = geoData.results[0].geometry.location.lng;
-    
+
                 console.log(geoData);
                 console.log('Latitude obtained: ' + lat);
                 console.log('Longitude obtained: ' + lon);
@@ -43,7 +62,7 @@ $(document).ready(function () {
                 callOpenWeatherAPI();
 
                 console.log('Calling trail API now...')
-                queryTrail();        
+                queryTrail();
             }
         });
     }
@@ -51,9 +70,8 @@ $(document).ready(function () {
 
     // AJAX call to Open Weather API to import weather data. (chance of rain, wind, humidity, etc.)
     function callOpenWeatherAPI() {
-        
+
         //openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
-        //openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
         openWeatherQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
 
         $.ajax({
@@ -63,85 +81,115 @@ $(document).ready(function () {
         }).then(function (openWeatherAPICall) {
             // lat = openWeatherAPICall.city.coord.lat;
             // lon = openWeatherAPICall.city.coord.lon;
-            
-            // testing storage
-            weatherData = openWeatherAPICall;
 
-            console.log(openWeatherAPICall);
-            console.log("Here is the weather forcast for: " + openWeatherAPICall.city.name); 
-            console.log("Lat: " + lat);
-            console.log("Lon: " + lon);
-            
-            for(var i = 0; i < openWeatherAPICall.list.length; i++) {
-                console.log(" ");
-                
-                var timeANDdate = openWeatherAPICall.list[i].dt_txt;
-                var time = timeANDdate.slice(11);
-                var date = timeANDdate.slice(0,10);
-        
-                if((time == "00:00:00") || (time == "03:00:00") || (time == "00:00:00") || (time == "21:00:00")) {
-                    console.log("Too early/late");
-                } else {
-                    console.log(openWeatherAPICall.list[i].dt_txt);
-                    checkWeatherConditions(openWeatherAPICall, i);
-                    console.log("Temp: " + openWeatherAPICall.list[i].main.temp);
-                    console.log("Max Temp: " + openWeatherAPICall.list[i].main.temp_max);
-                    console.log("Min Temp: " + openWeatherAPICall.list[i].main.temp_min);
-                    console.log("Conditions: " + openWeatherAPICall.list[i].weather[0].main);
-                    console.log("Ground Level: " + openWeatherAPICall.list[i].main.grnd_level);
-                    console.log("Wind: " + openWeatherAPICall.list[i].wind.deg + " degrees");
-                    console.log("Wind Speed: " + openWeatherAPICall.list[i].wind.speed);
-                    console.log("--End of record--");
-                    console.log(" ");
-                }
-            }
+            // testing storage
+            savedarray = openWeatherAPICall.list;
+            saveData(savedarray);
         });
     }
 
-    function checkWeatherConditions(openWeatherAPICall, i) {
-        if(openWeatherAPICall.list[i].main.temp > 100){
-            console.log("Please be cautious! It's over 100 degrees");
-        } else if(openWeatherAPICall.list[i].main.temp < 50) {
-            console.log("-----------------------");
-            console.log("Please be cautious! It's pretty cold outside!");
-            console.log("-----------------------");
-        }
-    
-        if(openWeatherAPICall.list[i].main.temp_max > 100) {
-            console.log("-----------------------");
-            console.log("It might get over 100 degrees! Bring some water in case!");
-            console.log("-----------------------");
-        }
-    
-        if(openWeatherAPICall.list[i].main.temp_min < 60) {
-            console.log("-----------------------");
-            console.log("It might be pretty cool outside. Bring a jacket just in case!");
-            console.log("-----------------------");
-        }
-    
-        if(openWeatherAPICall.list[i].wind.speed > 20) {
-            console.log("-----------------------");
-            console.log("It's going to be pretty windy outside. Be careful driving!");
-            console.log("-----------------------");
-        }
-    
-        switch(openWeatherAPICall.list[i].weather[0].main) {
-            case "Thunderstorm": 
-            console.log("Maybe not the best day to go hiking!");
-            break;
-    
-            case "Rain": 
-            console.log("-----------------------");
-            console.log("Bring a rain coat!");
-            console.log("-----------------------");
-            break;
-    
-            case "Snow": 
-            console.log("Don't forget your snow shoes!");
-            break;
+    function saveData() {
+        sixAM = savedarray.filter(function (savedarray) {
+            return savedarray.dt_txt.includes("06:00:00");
+        });
+        nineAM = savedarray.filter(function (savedarray) {
+            return savedarray.dt_txt.includes("09:00:00");
+        });
+
+        twelvePM = savedarray.filter(function (savedarray) {
+            return savedarray.dt_txt.includes("12:00:00");
+        });
+
+        threePM = savedarray.filter(function (savedarray) {
+            return savedarray.dt_txt.includes("15:00:00");
+        });
+
+        sixPM = savedarray.filter(function (savedarray) {
+            return savedarray.dt_txt.includes("18:00:00");
+        });
+
+        holdFilterHours = sixAM.concat(nineAM, twelvePM, threePM, sixPM);
+        filterDays(holdFilterHours);
+    }
+
+    function filterDays(holdFilterHours) {
+        day1 = moment(day1).add(1, "days").format("YYYY-MM-DD");
+        day2 = moment(day1).add(1, "days").format("YYYY-MM-DD");
+        day3 = moment(day2).add(1, "days").format("YYYY-MM-DD");
+        day4 = moment(day3).add(1, "days").format("YYYY-MM-DD");
+        day5 = moment(day4).add(1, "days").format("YYYY-MM-DD");
+
+        day1Forcast = holdFilterHours.filter(function (holdFilterHours) {
+            return holdFilterHours.dt_txt.includes(day1);
+        });
+
+        day2Forcast = holdFilterHours.filter(function (holdFilterHours) {
+            return holdFilterHours.dt_txt.includes(day2);
+        });
+
+        day3Forcast = holdFilterHours.filter(function (holdFilterHours) {
+            return holdFilterHours.dt_txt.includes(day3);
+        });
+
+        day4Forcast = holdFilterHours.filter(function (holdFilterHours) {
+            return holdFilterHours.dt_txt.includes(day4);
+        });
+
+        day5Forcast = holdFilterHours.filter(function (holdFilterHours) {
+            return holdFilterHours.dt_txt.includes(day5);
+        });
+        
+        dataForUse.push(day1Forcast);
+        dataForUse.push(day2Forcast);
+        dataForUse.push(day3Forcast);
+        dataForUse.push(day4Forcast);
+        dataForUse.push(day5Forcast);
+        console.log(dataForUse);
+        for (var U = 0; U < 5; U++) {
+            var dayOFWeek = moment(dataForUse[U][0].dt_txt);
+            dayOFWeek = moment(dayOFWeek).format("dddd");
+            console.log(" ")
+            console.log(dayOFWeek);
+            var dayOFWeekH3 = $('<h3>').addClass('header').text(dayOFWeek);
+            weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3);
         }
     }
 
+    function weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3) {
+
+        var cardCont = $('<div>').addClass('card-container');
+        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', dayOFWeek);
+
+        for (var Y = 0; Y < dataForUse[U].length; Y++) {
+            console.log(dataForUse[U][Y].dt_txt);
+            console.log(dataForUse[U][Y].main.temp);
+            console.log(dataForUse[U][Y].main.temp_max);
+            console.log(dataForUse[U][Y].main.temp_min);
+            console.log(dataForUse[U][Y].weather[0].main);
+
+            var time = $('<p>').addClass('time').text("Time: " + dataForUse[U][Y].dt_txt);
+            
+            if (dataForUse[U][Y].main.temp > 100) {
+                var tempValue = $('<p>').addClass('hotTemp').text("Temp:" + dataForUse[U][Y].main.temp);
+            } else {
+                tempValue = $('<p>').addClass('temp').text("Temp:" + dataForUse[U][Y].main.temp);
+            }
+
+            if (dataForUse[U][Y].weather[0].main == "Rain") {
+                var weatherValue = $('<p>').addClass('rainyWeather').text("Conditions: " + dataForUse[U][Y].weather[0].main);
+            } else {
+                weatherValue = $('<p>').addClass('weather').text("Conditions: " + dataForUse[U][Y].weather[0].main);
+            }
+            // Append line items to container and wrapper.
+            $(cardWrap).append(time, tempValue, weatherValue);
+            $(cardCont).append(cardWrap);
+
+            // Append container to output.
+            $('#weatherInfo').append(dayOFWeekH3);
+            $('#weatherInfo').append(cardCont);
+        }
+    }
+    
     // Make AJAX call to Find Bike Trails endpoint to import 
     function queryTrail() {
         console.log('Trail API received latitude of: ' + lat);
@@ -214,7 +262,10 @@ $(document).ready(function () {
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
+        console.log(thumbnail);
+        var hr = $(thumbnail).append($('<hr>'));
         var name = $('<h3>').addClass('header').text(na);
+        var hr = $(name).append($('<hr>'));
         var length = $('<p>').addClass('length').text(le + ' mi.');
         var rating = $('<p>').addClass('rating').text(ra + ' rating');
 
@@ -223,13 +274,32 @@ $(document).ready(function () {
 
 
         // Append line items to container and wrapper.
-        $(cardWrap).append(thumbnail, name, length, rating);
-        $(cardCont).append(cardWrap);
+        $(cardWrap).append(thumbnail, name, length, rating, hr);
+        $(cardCont).append(cardWrap,);
 
         // Append container to output.
-        $('#trailList').append(cardCont);
+        $('#trailList').append(cardCont,);
     }
 
+        /*---------------------\
+        | SHOW SIGNIN FUNCTION |
+        \---------------------*/
+    function showSignin() {
+    // Sign in box animation
+    $("#sign-in").animate(
+        // FIRST ARG CSS PROPS
+        {
+            opacity: 1,
+            top: '0px'
+        },
+        // SECOND ARG TIME (MS)
+        1500);
+        
+        $(".jumbotron").animate({
+            opacity: 1,
+            top: '0px'
+        },1000);
+    }
 
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
@@ -287,6 +357,7 @@ $(document).ready(function () {
         } else {
             console.log("False!");
             $("#date").addClass("is-invalid");
+            $(".wrongDate").text("Please choose a date within 5 days.");
         }
 
         // search animation
@@ -309,7 +380,10 @@ $(document).ready(function () {
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
+<<<<<<< HEAD
         //let thumb = $('<img>').attr('src', modalData.thumbnail);
+=======
+>>>>>>> 42a4b69f06dc27109f81ba1e7e7206bdd6ff1d8c
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg');
         let name = $('<h3>').text(modalData.name);
         let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
@@ -338,23 +412,13 @@ $(document).ready(function () {
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     
 
-    /*--------\
-    | ON LOAD |
-    \--------*/
-    // Sign in box animation
-    $("#sign-in").animate(
-        // FIRST ARG CSS PROPS
-        {
-            opacity: 1,
-            top: '0px'
-        },
-        // SECOND ARG TIME (MS)
-        1500);
-
-    $(".jumbotron").animate({
-        opacity: 1,
-        top: '0px'
-    },1000);    
+        
+        
+        /*--------\
+        | ON LOAD |
+        \--------*/
+        
+        showSignin();
 });
 
 
