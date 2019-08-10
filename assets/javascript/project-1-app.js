@@ -12,7 +12,8 @@ $(document).ready(function () {
     var trailAPIQueryURL = "";
     var lat = 0;
     var lon = 0;
-    var trails = {};
+    var weatherData = {};
+    var trailsData = {};
 
 
     // DOM //
@@ -62,8 +63,8 @@ $(document).ready(function () {
             // lat = openWeatherAPICall.city.coord.lat;
             // lon = openWeatherAPICall.city.coord.lon;
             
-            // ***** Rewrite later to separate this from this ajax call. Current has scope issue. ***** //
-            //test queryTrail(lat, lon);
+            // testing storage
+            weatherData = openWeatherAPICall;
 
             console.log(openWeatherAPICall);
             console.log("Here is the weather forcast for: " + openWeatherAPICall.city.name); 
@@ -147,7 +148,9 @@ $(document).ready(function () {
         console.log('');
 
         trailAPIQueryURL = "https://trailapi-trailapi.p.rapidapi.com/trails/explore/?lat=" + lat +"&lon=" + lon;
+        
         $.ajax({
+            async: false,
             url: trailAPIQueryURL,
             method: 'GET',
             headers: {
@@ -155,8 +158,11 @@ $(document).ready(function () {
                 "x-rapidapi-key": "cfbae3bd13msh660a849870aa5cap194a7fjsnd973bfb99523"
             }
         }).then(function (response) {
-            console.log(response);
             var data = response.data;
+            trailsData = data;
+
+            console.log(response);
+            console.log(trailsData);            
             console.log('Response length: ' + data.length);
             console.log('Type: '+ typeof data);
             console.log('');
@@ -168,10 +174,11 @@ $(document).ready(function () {
 
             for (let j = 0; j < data.length; j++) {
                 // Call render function and pass trail data.
-                renderCard(data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
+                renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
                 // Optional: Write a function that stores data in an object first.
 
                 // Output data to console.
+                console.log('Object key: ' + j);
                 console.log("State: " + data[j].region);
                 console.log('Description: ' + data[j].description);
                 console.log('Difficulty: ' + data[j].difficulty);
@@ -196,12 +203,13 @@ $(document).ready(function () {
 
     // SUGGEST & RENDER FUNCTION //
     // Take reorganized data and output to display.
-    // Optional: Allow resorting of output by specific attribute.
+    // Optional: Allow re-sorting of output by specific attribute.
 
-    function renderCard(na, th, ra, le) {
+    // Call this to render trail cards.
+    function renderCard(ke, na, th, ra, le) {
         // Create divs that contain trail info.
         var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12');
-        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', na);
+        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', ke);
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
@@ -220,7 +228,6 @@ $(document).ready(function () {
         // Append container to output.
         $('#trailList').append(cardCont);
     }
-
 
 
     // Optional: STORAGE FUNCTION //
@@ -290,15 +297,42 @@ $(document).ready(function () {
     | ON CLICK OF TRAIL CARD |
     \-----------------------*/
 
+    // Populate and display a trail modal.
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
 
-        let trailName = $(this).attr('id');
-        console.log(trailName);
+        let id = $(this).attr('id');
+        console.log(trailsData[id]);
+        let modalData = trailsData[id];
 
+        //test $('#trailModal').empty();
+        $('#trailContent').empty();
+        
+        let thumb = $('<img>').attr('src', modalData.thumbnail);
+        let name = $('<h3>').text(modalData.name);
+        let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
+        let desc = $('<p>').text('Description: ' + modalData.description);
+        let dir = $('<p>').text('Directions: ' + modalData.directions);
+        let site = $('<a>').attr('href', modalData.url).text(modalData.url);
+
+        $('#trailContent').append(thumb, name, diff, desc, dir, site);
+
+        $('#trailModal').show();
     });
 
+    // When the user clicks outside of the modal, close modal.
+    window.onclick = function (event) {
+        var modal = $('#trailModal')[0];
+        // console.log(modal);
+        // console.log(event.target);
+        // Consider: $(event.target)
+        if (event.target == modal) {
+        // modal.style.display = 'none';
+        $('#trailModal').hide();
+        }
+    }
 
+    
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     
 
