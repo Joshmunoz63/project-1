@@ -15,27 +15,7 @@ $(document).ready(function () {
     var weatherData = {};
     var trailsData = {};
 
-    var savedarray;
-    var sixAM;
-    var nineAM;
-    var twelvePM;
-    var threePM;
-    var sixPM;
 
-    var day1;
-    var day2;
-    var day3;
-    var day4;
-    var day5;
-
-    var day1Forcast;
-    var day2Forcast;
-    var day3Forcast;
-    var day4Forcast;
-    var day5Forcast;
-
-    var holdFilterHours = [];
-    var dataForUse = [];
     // DOM //
     // Declare connections with DOM as needed.
 
@@ -85,91 +65,81 @@ $(document).ready(function () {
             // lon = openWeatherAPICall.city.coord.lon;
             
             // testing storage
-            savedarray = openWeatherAPICall.list;
-             saveData(savedarray);
-        });
-    }
+            weatherData = openWeatherAPICall;
 
-    function saveData() {
-        sixAM = savedarray.filter(function (savedarray) {
-            return savedarray.dt_txt.includes("06:00:00");
-        });
-         nineAM = savedarray.filter(function (savedarray) {
-            return savedarray.dt_txt.includes("09:00:00");
-        });
-
-         twelvePM = savedarray.filter(function (savedarray) {
-            return savedarray.dt_txt.includes("12:00:00");
-        });
-
-         threePM = savedarray.filter(function (savedarray) {
-            return savedarray.dt_txt.includes("15:00:00");
-        });
-
-         sixPM = savedarray.filter(function (savedarray) {
-            return savedarray.dt_txt.includes("18:00:00");
-        });
-
-        holdFilterHours = sixAM.concat(nineAM,twelvePM,threePM,sixPM);
-        filterDays(holdFilterHours);
-    }
-
-    function filterDays(holdFilterHours) {
-         day1 = moment(day1).add(1, "days").format("YYYY-MM-DD");
-         day2 = moment(day1).add(1, "days").format("YYYY-MM-DD");
-         day3 = moment(day2).add(1, "days").format("YYYY-MM-DD");
-         day4 = moment(day3).add(1, "days").format("YYYY-MM-DD");
-         day5 = moment(day4).add(1, "days").format("YYYY-MM-DD");
-
-        day1Forcast = holdFilterHours.filter(function (holdFilterHours) {
-            return holdFilterHours.dt_txt.includes(day1);
-        });
-
-        day2Forcast = holdFilterHours.filter(function (holdFilterHours) {
-            return holdFilterHours.dt_txt.includes(day2);
-        });
-
-        day3Forcast = holdFilterHours.filter(function (holdFilterHours) {
-            return holdFilterHours.dt_txt.includes(day3);
-        });
-
-        day4Forcast = holdFilterHours.filter(function (holdFilterHours) {
-            return holdFilterHours.dt_txt.includes(day4);
-        });
-
-        day5Forcast = holdFilterHours.filter(function (holdFilterHours) {
-            return holdFilterHours.dt_txt.includes(day5);
-        });
+            console.log(openWeatherAPICall);
+            console.log("Here is the weather forcast for: " + openWeatherAPICall.city.name); 
+            console.log("Lat: " + lat);
+            console.log("Lon: " + lon);
+            
+            for(var i = 0; i < openWeatherAPICall.list.length; i++) {
+                console.log(" ");
+                
+                var timeANDdate = openWeatherAPICall.list[i].dt_txt;
+                var time = timeANDdate.slice(11);
+                var date = timeANDdate.slice(0,10);
         
-        checkWeatherConditions(day1Forcast, day2Forcast, day3Forcast, day4Forcast, day5Forcast);
+                if((time == "00:00:00") || (time == "03:00:00") || (time == "00:00:00") || (time == "21:00:00")) {
+                    console.log("Too early/late");
+                } else {
+                    console.log(openWeatherAPICall.list[i].dt_txt);
+                    checkWeatherConditions(openWeatherAPICall, i);
+                    console.log("Temp: " + openWeatherAPICall.list[i].main.temp);
+                    console.log("Max Temp: " + openWeatherAPICall.list[i].main.temp_max);
+                    console.log("Min Temp: " + openWeatherAPICall.list[i].main.temp_min);
+                    console.log("Conditions: " + openWeatherAPICall.list[i].weather[0].main);
+                    console.log("Ground Level: " + openWeatherAPICall.list[i].main.grnd_level);
+                    console.log("Wind: " + openWeatherAPICall.list[i].wind.deg + " degrees");
+                    console.log("Wind Speed: " + openWeatherAPICall.list[i].wind.speed);
+                    console.log("--End of record--");
+                    console.log(" ");
+                }
+            }
+        });
     }
 
-
-    function checkWeatherConditions(one,two,three,four,five) {
-        for (i = 0; i < one.length; i++) {
-            $(".jumbotron").append(one[i].dt_txt + ": " + one[i].weather[0].main);
+    function checkWeatherConditions(openWeatherAPICall, i) {
+        if(openWeatherAPICall.list[i].main.temp > 100){
+            console.log("Please be cautious! It's over 100 degrees");
+        } else if(openWeatherAPICall.list[i].main.temp < 50) {
+            console.log("-----------------------");
+            console.log("Please be cautious! It's pretty cold outside!");
+            console.log("-----------------------");
         }
-
-        $(".jumbotron").append("----------------------------------");
-        for (i = 0; i < two.length; i++) {
-            $(".jumbotron").append(two[i].dt_txt + ": " + two[i].weather[0].main);
+    
+        if(openWeatherAPICall.list[i].main.temp_max > 100) {
+            console.log("-----------------------");
+            console.log("It might get over 100 degrees! Bring some water in case!");
+            console.log("-----------------------");
         }
-
-        $(".jumbotron").append("----------------------------------");
-        for (i = 0; i < three.length; i++) {
-            $(".jumbotron").append(three[i].dt_txt + ": " + three[i].weather[0].main);
+    
+        if(openWeatherAPICall.list[i].main.temp_min < 60) {
+            console.log("-----------------------");
+            console.log("It might be pretty cool outside. Bring a jacket just in case!");
+            console.log("-----------------------");
         }
-
-        $(".jumbotron").append("----------------------------------");
-        for (i = 0; i < four.length; i++) {
-            $(".jumbotron").append(four[i].dt_txt + ": " + four[i].weather[0].main);
+    
+        if(openWeatherAPICall.list[i].wind.speed > 20) {
+            console.log("-----------------------");
+            console.log("It's going to be pretty windy outside. Be careful driving!");
+            console.log("-----------------------");
         }
-
-        $(".jumbotron").append("----------------------------------");
-        for (i = 0; i < five.length; i++) {
-            $(".jumbotron").append(five[i].dt_txt + ": " + five[i].weather[0].main);
+    
+        switch(openWeatherAPICall.list[i].weather[0].main) {
+            case "Thunderstorm": 
+            console.log("Maybe not the best day to go hiking!");
+            break;
+    
+            case "Rain": 
+            console.log("-----------------------");
+            console.log("Bring a rain coat!");
+            console.log("-----------------------");
+            break;
+    
+            case "Snow": 
+            console.log("Don't forget your snow shoes!");
+            break;
         }
-
     }
 
     // Make AJAX call to Find Bike Trails endpoint to import 
@@ -331,11 +301,11 @@ $(document).ready(function () {
     // Populate and display a trail modal.
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
-
+        
         let id = $(this).attr('id');
-        console.log(trailsData[id]);
         let modalData = trailsData[id];
-
+        
+        console.log(modalData)
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
@@ -385,6 +355,5 @@ $(document).ready(function () {
         top: '0px'
     },1000);    
 });
-
 
 
