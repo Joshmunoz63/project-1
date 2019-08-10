@@ -214,7 +214,10 @@ $(document).ready(function () {
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
+        console.log(thumbnail);
+        var hr = $(thumbnail).append($('<hr>'));
         var name = $('<h3>').addClass('header').text(na);
+        var hr = $(name).append($('<hr>'));
         var length = $('<p>').addClass('length').text(le + ' mi.');
         var rating = $('<p>').addClass('rating').text(ra + ' rating');
 
@@ -223,13 +226,32 @@ $(document).ready(function () {
 
 
         // Append line items to container and wrapper.
-        $(cardWrap).append(thumbnail, name, length, rating);
-        $(cardCont).append(cardWrap);
+        $(cardWrap).append(thumbnail, name, length, rating, hr);
+        $(cardCont).append(cardWrap,);
 
         // Append container to output.
-        $('#trailList').append(cardCont);
+        $('#trailList').append(cardCont,);
     }
 
+        /*---------------------\
+        | SHOW SIGNIN FUNCTION |
+        \---------------------*/
+    function showSignin() {
+    // Sign in box animation
+    $("#sign-in").animate(
+        // FIRST ARG CSS PROPS
+        {
+            opacity: 1,
+            top: '0px'
+        },
+        // SECOND ARG TIME (MS)
+        1500);
+        
+        $(".jumbotron").animate({
+            opacity: 1,
+            top: '0px'
+        },1000);
+    }
 
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
@@ -287,6 +309,7 @@ $(document).ready(function () {
         } else {
             console.log("False!");
             $("#date").addClass("is-invalid");
+            $(".wrongDate").text("Please choose a date within 5 days.");
         }
 
         // search animation
@@ -309,7 +332,7 @@ $(document).ready(function () {
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
-        let thumb = $('<img>').attr('src', modalData.thumbnail);
+        let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg');
         let name = $('<h3>').text(modalData.name);
         let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
         let desc = $('<p>').text('Description: ' + modalData.description);
@@ -337,23 +360,13 @@ $(document).ready(function () {
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     
 
-    /*--------\
-    | ON LOAD |
-    \--------*/
-    // Sign in box animation
-    $("#sign-in").animate(
-        // FIRST ARG CSS PROPS
-        {
-            opacity: 1,
-            top: '0px'
-        },
-        // SECOND ARG TIME (MS)
-        1500);
-
-    $(".jumbotron").animate({
-        opacity: 1,
-        top: '0px'
-    },1000);    
+        
+        
+        /*--------\
+        | ON LOAD |
+        \--------*/
+        
+        showSignin();
 });
 
 
