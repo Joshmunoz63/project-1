@@ -300,11 +300,11 @@ $(document).ready(function () {
     // Populate and display a trail modal.
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
-
+        
         let id = $(this).attr('id');
-        console.log(trailsData[id]);
         let modalData = trailsData[id];
-
+        
+        console.log(modalData)
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
