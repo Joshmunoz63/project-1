@@ -5,6 +5,7 @@
     text-align: center;
     background-color:whitesmoke;
     color: black;
+
     font-family: 'Staatliches', cursive;
     border-radius: 0;
     padding: 1%;
@@ -31,6 +32,7 @@ h4{
 
 .card{
     font-family: 'Lexend Giga', sans-serif;
+
 }
 
 body{
@@ -47,6 +49,7 @@ body{
     color: black;
 }
 .btn{
+
     background-color: rgb(32, 121, 255);
     color: white;
     border: 2px solid rgb(0, 84, 211);
@@ -55,6 +58,7 @@ body{
 .btn:hover {
     box-shadow: 0 8px 12px 0 rgba(0,0,0,0.24), 0 10px 20px 0 rgba(0,0,0,0.19);
     background-color: rgb(255, 0, 55);
+
 }
 
 /*---------------------------\
