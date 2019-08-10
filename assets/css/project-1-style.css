@@ -137,6 +137,9 @@ body{
     top: 50%;
     transform: translate(-50%, -50%);
   }
+.trailImg {
+    width: 50px;
+}
   
 /*--------\
 | ON LOAD |

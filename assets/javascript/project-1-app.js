@@ -309,7 +309,8 @@ $(document).ready(function () {
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
-        let thumb = $('<img>').attr('src', modalData.thumbnail);
+        //let thumb = $('<img>').attr('src', modalData.thumbnail);
+        let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg');
         let name = $('<h3>').text(modalData.name);
         let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
         let desc = $('<p>').text('Description: ' + modalData.description);
