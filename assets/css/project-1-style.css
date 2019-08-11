@@ -1,7 +1,7 @@
 /*---------------------\
 | STYLING FOR HOMEPAGE |
 \---------------------*/
-.jumbotron{
+.jumbotron {
     text-align: center;
     background-color:whitesmoke;
     color: black;
@@ -11,31 +11,36 @@
     padding: 1%;
 }
 
-.col-lg-12{
+.col-lg-12 {
     padding: 0;
 }
 
-.card{
+.card {
     outline: 3px;
     outline-style: solid;
     outline-color: rgb(52, 53, 53);
     border-radius: 0;
 }
 
-h1{
+h1 {
     font-size: 80px;
 }
 
-h4{
+h3 {
+    white-space:normal;
+    word-wrap:break-word;
+}
+
+h4 {
     font-size: 30px;
 }
 
-.card{
+.card {
     font-family: 'Lexend Giga', sans-serif;
 
 }
 
-.background{
+.background {
     background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
     background-size: cover;
     z-index: 0;
@@ -48,11 +53,11 @@ h4{
     height: 100vh;
     width: 100vw;
 }
-.card{
+.card {
     background-color:whitesmoke;
     color: black;
 }
-.btn{
+.btn {
 
     background-color: rgb(32, 121, 255);
     color: white;
@@ -65,7 +70,7 @@ h4{
 
 }
 
-.wrongDate{
+.wrongDate {
     margin-top: 10px;
 }
 #state {
@@ -90,7 +95,7 @@ h4{
     font-family: 'Lexend Giga', sans-serif;
 }
 
-.header{
+.header {
     font-size: 25px;
 }
 
@@ -132,7 +137,7 @@ h4{
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
   }
   
   /* Modal Content/Box */
@@ -152,34 +157,59 @@ h4{
     transform: translate(-50%, -50%);
     font-family: 'Lexend Giga', sans-serif;
   }
-  .trailImg{
-    width: 150px;
+.trailImg {
+    /*margin: 1rem auto 1.5rem;*/
+    max-width: 250px;
+    height: auto;
   }
-  .trailImg {
-    width: 50px;
-  }
-  
+.imgLink {
+    margin: 1rem auto 1.5rem;
+}
 /*--------\
 | ON LOAD |
 \--------*/
 /* this is for onload animations */
+/*
 #sign-in {
     position: relative;
     opacity: 0;
     top: 1000px;
 }
 
-.jumbotron{
+.jumbotron {
     position: relative;
     opacity: 0;
     bottom: 1000px;
 }
-
-/*----------------\
-| SEARCH ANIMATION|
-\----------------*/
-#na{
+*/
+/*-----------------\
+| SEARCH ANIMATION |
+\-----------------*/
+#na {
     position: relative;
     opacity: 0;
     top: 10000px;
+}
+
+/*------------\
+| MEDIA QUERY |
+\------------*/
+
+@media only screen and (max-width: 768px) {
+    .trailImg {
+        /* Use default size of thumbnails */
+        max-width: 200px;
+        height: auto;
+    }
+
+    h1 {
+        font-size: 50px;
+    }
+
+    h4 {
+        font-size: 15px;
+    }
+
+    /* add one for trail card's h3 */
+
 }

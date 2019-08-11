@@ -35,11 +35,32 @@ $(document).ready(function () {
 
     var holdFilterHours = [];
     var dataForUse = [];
+
+
     // DOM //
     // Declare connections with DOM as needed.
+    const signIn =  document.querySelector('#sign-in');
+    const jumbotron = document.querySelector(".jumbotron");
 
+    /*------------\
+    |  FUNCTIONS  |
+    \------------*/
 
-    //Functions -----------------------------------------
+    // Call this to get current location.
+    function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    // Call 
+    function showPosition(position) {
+        x.innerHTML = "Latitude: " + position.coords.latitude + 
+        "<br>Longitude: " + position.coords.longitude; 
+    };
+
 
     // AJAX call to Google Maps Javascript API's geocoder class to get latitude & longitude based on State and City.
     function queryGeocode() {
@@ -208,8 +229,11 @@ $(document).ready(function () {
                 "x-rapidapi-key": "cfbae3bd13msh660a849870aa5cap194a7fjsnd973bfb99523"
             }
         }).then(function (response) {
-            var data = response.data;
-            trailsData = data;
+            //testing var data = response.data;
+            // trailsData = data;
+
+            trailsData = response.data;
+            data = trailsData;
 
             console.log(response);
             console.log(trailsData);            
@@ -223,10 +247,6 @@ $(document).ready(function () {
 
 
             for (let j = 0; j < data.length; j++) {
-                // Call render function and pass trail data.
-                renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
-                // Optional: Write a function that stores data in an object first.
-
                 // Output data to console.
                 console.log('Object key: ' + j);
                 console.log("State: " + data[j].region);
@@ -237,9 +257,20 @@ $(document).ready(function () {
                 console.log('Length in miles: ' + data[j].length);
                 console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
                 console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
+
+                // Error-catch for blank thumbnail URL.
+                if (data[j].thumbnail === "") {
+                    console.log('Thumbnail is considered blank...');
+                    data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
+                } else {console.log('Thumbnail looks normal.')};
+
                 // Singletracks.com has Trail widget if higher res pic is needed, but may need to show other info.
                 console.log('Profile page: ' + data[j].url); // URL to profile page.
                 console.log(' ');
+
+                // Call render function and pass trail data.
+                renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
+                
             }
 
         }) // End of AJAX call to Trail API.
@@ -264,9 +295,9 @@ $(document).ready(function () {
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
         console.log(thumbnail);
-        var hr = $(thumbnail).append($('<hr>'));
+//        var hr = $(thumbnail).append($('<hr>'));
         var name = $('<h3>').addClass('header').text(na);
-        var hr = $(name).append($('<hr>'));
+  //      var hr = $(name).append($('<hr>'));
         var length = $('<p>').addClass('length').text(le + ' mi.');
         var rating = $('<p>').addClass('rating').text(ra + ' rating');
 
@@ -275,32 +306,69 @@ $(document).ready(function () {
 
 
         // Append line items to container and wrapper.
-        $(cardWrap).append(thumbnail, name, length, rating, hr);
-        $(cardCont).append(cardWrap,);
+        $(cardWrap).append(thumbnail, name, length, rating);
+        $(cardCont).append(cardWrap);
 
         // Append container to output.
-        $('#trailList').append(cardCont,);
+        $('#trailList').append(cardCont);
     }
 
-        /*---------------------\
-        | SHOW SIGNIN FUNCTION |
-        \---------------------*/
+        /*--------------------------\
+        | SIGNIN ANIMATION FUNCTION |
+        \--------------------------*/
     function showSignin() {
     // Sign in box animation
-    $("#sign-in").animate(
-        // FIRST ARG CSS PROPS
-        {
-            opacity: 1,
-            top: '0px'
-        },
-        // SECOND ARG TIME (MS)
-        700);
+    // $("#sign-in").animate(
+    //     // FIRST ARG CSS PROPS
+    //     {
+    //         opacity: 1,
+    //         top: '0px'
+    //     },
+    //     // SECOND ARG TIME (MS)
+    //     700);
         
-        $(".jumbotron").animate({
-            opacity: 1,
-            top: '0px'
-        },1000);
+    //     $(".jumbotron").animate({
+    //         opacity: 1,
+    //         top: '0px'
+    //     },1000);
+
+        // Animate.CSS
+        signIn.classList.add('animated', 'bounceInUp');
+        //jumbotron.classList.add('animated', 'bounceInDown');
+
     }
+
+    function hideSignin() {
+        // $("#sign-in").animate({
+        //     opacity: 0,
+        //     top: '1000px'
+        // },2000);
+
+        // $(".jumbotron").animate({
+        //     opacity: 0,
+        //     bottom: '10000px'
+        // },1000)
+
+        // Animate.CSS
+        signIn.classList.add('animated', 'bounceOutDown');
+        signIn.addEventListener('animationend', function() {
+            $('#spacer').hide();
+         })
+        jumbotron.classList.add('animated', 'bounceOutUp');
+        jumbotron.addEventListener('animationend', function() {
+            $('#jumboCont').hide();
+         })
+        //     
+        // signIn.addEventListener('animationend', function() { 
+        //     $('#sign-in').hide() });
+    }
+
+    // function imgError(image) {
+    //     image.onerror = "";
+    //     image.src = "https://images.singletracks.com/graphics/no_photo_750x500.png";
+    //     //"this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
+    //     return true;
+    // }
 
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
@@ -342,23 +410,14 @@ $(document).ready(function () {
 
         if(checkInBetween == true) {
             console.log("True!");
-
-            $("#sign-in").animate({
-                opacity: 0,
-                top: '1000px'
-            },1000);
-    
-            $(".jumbotron").animate({
-                opacity: 0,
-                bottom: '10000px'
-            },1000);
+            hideSignin();
 
             queryGeocode();
             $("#date").removeClass("is-invalid");
         } else {
             console.log("False!");
             $("#date").addClass("is-invalid");
-            $(".wrongDate").text("Please choose a date within 5 days.");
+            $(".errorMessage").text("Please choose a date within 5 days.");
         }
 
         // search animation
@@ -382,16 +441,35 @@ $(document).ready(function () {
         $('#trailContent').empty();
         
         //let thumb = $('<img>').attr('src', modalData.thumbnail);
-        let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg');
-        let name = $('<h3>').text(modalData.name);
-        let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
-        let desc = $('<p>').text('Description: ' + modalData.description);
-        let dir = $('<p>').text('Directions: ' + modalData.directions);
-        let site = $('<a>').attr('href', modalData.url).text(modalData.url);
+//         if (modalData.thumbnail === "") {
+//             // Fallback image
+//             //let thumb = $('<img>').attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png').addClass('trailImg img-thumbnail');
+//             let thumb = $('<img>')
+//                 .attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png')
+//                 .on('error', imgError() )
+// //                "this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
+//                 //onerror: "imgError(" + this + ")"
+//                 .addClass('trailImg img-thumbnail');
+//         } else {
+//             let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
+//         }
+        let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
 
-        $('#trailContent').append(thumb, name, diff, desc, dir, site);
+        let site = $('<a>').attr('href', modalData.url).addClass('imgLink').append(thumb);
+        let name = $('<h3>').text(modalData.name);
+        let diff = $('<p>').text('DIFFICULTY: ' + modalData.difficulty);
+        let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);
+        let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
+        //let site = $('<a>').attr('href', modalData.url).text(modalData.url);
+
+        //$('#trailContent').append(thumb, name, diff, desc, dir, site);
+        $('#trailContent').append(site, name, diff, desc, dir);
 
         $('#trailModal').show();
+
+        // Animate.CSS on modal.
+        const animateModal =  document.querySelector('#trailModal');
+        animateModal.classList.add('animated', 'bounceInDown');
     });
 
     // When the user clicks outside of the modal, close modal.
