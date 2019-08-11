@@ -37,12 +37,26 @@ $(document).ready(function () {
     var dataForUse = [];
 
 
-    // DOM //
-    // Declare connections with DOM as needed.
+    // DOM Connections //
     const signIn =  document.querySelector('#sign-in');
     const jumboContainer = document.querySelector("#jumboCont");
     const jumboContent = document.querySelector("#jumbotron");
     const infoContainer = document.querySelector('#infoCont');
+
+
+    // Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyDKCCyMyN9zvULKn39PO9R_c2jYXF96SUs",
+        authDomain: "uta-cb-project-1.firebaseapp.com",
+        databaseURL: "https://uta-cb-project-1.firebaseio.com",
+        projectId: "uta-cb-project-1",
+        storageBucket: "",
+        messagingSenderId: "562769266637",
+        appId: "1:562769266637:web:273f52edb364aaf2"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
 
     /*------------\
     |  FUNCTIONS  |
