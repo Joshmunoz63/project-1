@@ -74,7 +74,7 @@ $(document).ready(function () {
         let today = now.getFullYear()+"-"+(month)+"-"+(day);
         $('#date').val(today).attr('placeholder', moment().format('MM/DD/YYYY'));
 
-//        updateMaxDate(today);
+    //        updateMaxDate(today);
     }
     
     // Call this to update date input's max date. 
@@ -500,7 +500,10 @@ $(document).ready(function () {
         // Geocode AJAX call is made only when search button is clicked, so we can sequentially call other AJAX calls from within.
         
         var currentDate = moment();
-        var currentDatePlus5 = moment(currentDate).add(5,"days");
+
+        // May need to fine-tune.
+        var currentDatePlus5 = moment(currentDate).add(6,"days");
+        
         userInputDate = moment(userInputDate, "YYYY/MM/DD");
         console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
         console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
