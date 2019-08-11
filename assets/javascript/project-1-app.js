@@ -185,7 +185,8 @@ $(document).ready(function () {
             $(cardCont).append(cardWrap);
 
             // Append container to output.
-            $('#weatherInfo').append(dayOFWeekH3);
+            //$('#weatherInfo').append(dayOFWeekH3);
+            $(cardWrap).prepend(dayOFWeekH3);
             $('#weatherInfo').append(cardCont);
         }
     }
