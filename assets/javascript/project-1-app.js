@@ -230,6 +230,7 @@ $(document).ready(function () {
             dayOFWeek = moment(dayOFWeek).format("dddd");
             console.log(" ")
             console.log(dayOFWeek);
+            console.log(dataForUse);
             var dayOFWeekH3 = $('<h3>').addClass('header').text(dayOFWeek);
             weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3);
         }
@@ -237,8 +238,9 @@ $(document).ready(function () {
 
     function weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3) {
 
-        var cardCont = $('<div>').addClass('card-container');
+        var cardCont = $('<div>').addClass('container card-container col-lg-2');
         var cardWrap = $('<div>').addClass('card-wrapper').attr('id', dayOFWeek);
+        
 
         for (var Y = 0; Y < dataForUse[U].length; Y++) {
             console.log(dataForUse[U][Y].dt_txt);
@@ -247,21 +249,37 @@ $(document).ready(function () {
             console.log(dataForUse[U][Y].main.temp_min);
             console.log(dataForUse[U][Y].weather[0].main);
 
-            var time = $('<p>').addClass('time').text("Time: " + dataForUse[U][Y].dt_txt);
+            var holdTimeANDDate = dataForUse[U][Y].dt_txt;
+            var holdTime = holdTimeANDDate.split(" ",10);
+
+            var hourWrap = $('<div>').addClass('hourWrapper').attr('id', holdTime);
+
+            var time = $('<p>').addClass('time').text(holdTime[1]);
+
+            var tempValue;
             
             if (dataForUse[U][Y].main.temp > 100) {
-                var tempValue = $('<p>').addClass('hotTemp').text("Temp:" + dataForUse[U][Y].main.temp);
+                tempValue = $('<p>').text("Temp:" + dataForUse[U][Y].main.temp);
+                $(hourWrap).addClass("hotTemp");
+            } else if(dataForUse[U][Y].main.temp < 50) {
+                tempValue = $('<p>').text("Temp:" + dataForUse[U][Y].main.temp);
+                $(hourWrap).addClass("coldTemp");
             } else {
-                tempValue = $('<p>').addClass('temp').text("Temp:" + dataForUse[U][Y].main.temp);
+                tempValue = $('<p>').text("Temp:" + dataForUse[U][Y].main.temp);
             }
+            
 
             if (dataForUse[U][Y].weather[0].main == "Rain") {
-                var weatherValue = $('<p>').addClass('rainyWeather').text("Conditions: " + dataForUse[U][Y].weather[0].main);
+                var weatherValue = $('<p>').text(dataForUse[U][Y].weather[0].main);
+                var weatherIcon = $('<img id ="icons" src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
+                $(hourWrap).addClass("rainyWeather");
             } else {
-                weatherValue = $('<p>').addClass('weather').text("Conditions: " + dataForUse[U][Y].weather[0].main);
+                weatherIcon = $('<img src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
+                weatherValue = $('<p>').text(dataForUse[U][Y].weather[0].main);
             }
             // Append line items to container and wrapper.
-            $(cardWrap).append(time, tempValue, weatherValue);
+            $(hourWrap).append(time, tempValue, weatherValue, weatherIcon);
+            $(cardWrap).append(hourWrap);
             $(cardCont).append(cardWrap);
 
             // Append container to output.
@@ -510,6 +528,8 @@ $(document).ready(function () {
         console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
         var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
         console.log(checkInBetween);
+
+        queryGeocode();
 
         if(checkInBetween == true) {
             console.log("Date is within 5 days!");

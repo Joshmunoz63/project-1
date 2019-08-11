@@ -112,6 +112,21 @@ h4 {
 #weatherInfo * {
     z-index: 1;
 }
+.hotTemp {
+    background-color: crimson;
+}
+
+.coldTemp {
+    background-color: aquamarine;
+}
+
+.hourWrapper {
+    margin-top: 10px;
+}
+
+.icons { 
+    
+}
 /*
 .modal {
     display: none; /* Hidden by default 
