@@ -238,48 +238,51 @@ $(document).ready(function () {
 
     function weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3) {
 
-        var cardCont = $('<div>').addClass('container card-container col-lg-2');
+        var cardCont = $('<div>').addClass('container card-container col-lg-2 col-md-4 col-sm-12 weatherCont');
         var cardWrap = $('<div>').addClass('card-wrapper').attr('id', dayOFWeek);
         
 
         for (var Y = 0; Y < dataForUse[U].length; Y++) {
-            console.log(dataForUse[U][Y].dt_txt);
-            console.log(dataForUse[U][Y].main.temp);
-            console.log(dataForUse[U][Y].main.temp_max);
-            console.log(dataForUse[U][Y].main.temp_min);
-            console.log(dataForUse[U][Y].weather[0].main);
+            // console.log(dataForUse[U][Y].dt_txt);
+            // console.log(dataForUse[U][Y].main.temp);
+            // console.log(dataForUse[U][Y].main.temp_max);
+            // console.log(dataForUse[U][Y].main.temp_min);
+            // console.log(dataForUse[U][Y].weather[0].main);
 
-            var holdTimeANDDate = dataForUse[U][Y].dt_txt;
+            // Displaying time block in a day
+            var holdTimeANDDate = moment(dataForUse[U][Y].dt_txt).format('YYYY-MM-DD HH:mm A');
             var holdTime = holdTimeANDDate.split(" ",10);
-
             var hourWrap = $('<div>').addClass('hourWrapper').attr('id', holdTime);
-
-            var time = $('<p>').addClass('time').text(holdTime[1]);
+            var time = $('<p>').addClass('time').text(holdTime[1] + ' ' + holdTime[2]);
 
             var tempValue;
             
-            if (dataForUse[U][Y].main.temp > 100) {
-                tempValue = $('<p>').text("Temp:" + dataForUse[U][Y].main.temp);
+            // Temperature warning
+            if (dataForUse[U][Y].main.temp > 90) {
+                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
                 $(hourWrap).addClass("hotTemp");
             } else if(dataForUse[U][Y].main.temp < 50) {
-                tempValue = $('<p>').text("Temp:" + dataForUse[U][Y].main.temp);
+                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
                 $(hourWrap).addClass("coldTemp");
             } else {
-                tempValue = $('<p>').text("Temp:" + dataForUse[U][Y].main.temp);
+                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
             }
             
-
-            // weather conditions
+            // Hazardous weather conditions
             if (dataForUse[U][Y].weather[0].main == "Rain") {
-                var weatherValue = $('<p>').text(dataForUse[U][Y].weather[0].main);
-                var weatherIcon = $('<img id ="icons" src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
+                var weatherValue = $('<p>').addClass('weatherCond').text(dataForUse[U][Y].weather[0].main);
+                var weatherIcon = $('<img class="wIcon" id ="icons" src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
                 $(hourWrap).addClass("rainyWeather");
             } else {
-                weatherIcon = $('<img src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
-                weatherValue = $('<p>').text(dataForUse[U][Y].weather[0].main);
+                weatherIcon = $('<img class="wIcon" src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
+                weatherValue = $('<p>').addClass('weatherCond').text(dataForUse[U][Y].weather[0].main);
             }
+
             // Append line items to container and wrapper.
-            $(hourWrap).append(time, tempValue, weatherValue, weatherIcon);
+            var timeNTemp = $('<div>').append(time, tempValue).addClass('timeNTemp');
+            var condNIcon = $('<div>').append(weatherValue, weatherIcon).addClass('condNIcon');
+
+            $(hourWrap).append(timeNTemp, condNIcon);
             $(cardWrap).append(hourWrap);
             $(cardCont).append(cardWrap);
 
@@ -382,8 +385,8 @@ $(document).ready(function () {
     // Call this to render trail cards.
     function renderCard(ke, na, th, ra, le) {
         // Create divs that contain trail info.
-        var cardCont = $('<div>').addClass('card-container col col-lg-3 col-md-4 col-sm-12');
-        var cardWrap = $('<div>').addClass('card-wrapper').attr('id', ke);
+        var cardCont = $('<div>').addClass('card-container col col-lg-2 col-md-4 col-sm-12 trailCont');
+        var cardWrap = $('<div>').addClass('card-wrapper trailWrap').attr('id', ke);
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
@@ -622,6 +625,7 @@ $(document).ready(function () {
         // Animate.CSS on modal.
         const animateModal =  document.querySelector('#trailModal');
         animateModal.classList.add('animated', 'slideInDown');
+        animateModal.classList.add('animated', 'faster');
     });
 
     // When the user clicks outside of the modal, close modal.

@@ -87,8 +87,9 @@ h4 {
     color:mediumblue;
 }
 .card-wrapper {
-    background: rgb(255, 255, 255); /* The Fallback */
-    background: rgba(255, 255, 255, 0.8);
+    background: rgb(93, 230, 93); /* The Fallback */
+    background: rgba(93, 230, 93, 0.9);
+    background-image: linear-gradient(65deg, yellow, transparent);
     border: 2px solid black; 
     border-radius: 10px;
     padding: 20px;
@@ -113,22 +114,64 @@ h4 {
     z-index: 1;
 }
 
+#weatherInfo {
+    justify-content: center;
+    padding: 0 0.5rem 0.2rem;
+}
+
 #weatherInfo p {
     margin-bottom: 0;
+}
+
+.weatherCont {
+    margin: 0;
+    padding: 0;
+}
+
+.weatherCond {
+    display: inline-block;
+}
+
+.wIcon {
+    width: 2.5rem;
+    padding: 0;
+}
+
 .hotTemp {
     background-color: crimson;
 }
 
 .coldTemp {
-    background-color: aquamarine;
+    background-color: rgb(127, 220, 255);
 }
 
 .hourWrapper {
     margin-top: 10px;
+    /* divider line */
+    border-top: 1px solid black;    
+}
+
+.timeNTemp {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+.condNIcon {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
 }
 
 .icons { 
     
+}
+
+.trailCont {
+    padding: 0.5%;
+}
+
+.trailWrap:hover {
+    border: 3px solid orange;
 }
 /*
 .modal {
