@@ -293,7 +293,7 @@ $(document).ready(function () {
             top: '0px'
         },
         // SECOND ARG TIME (MS)
-        1500);
+        700);
         
         $(".jumbotron").animate({
             opacity: 1,
@@ -380,10 +380,7 @@ $(document).ready(function () {
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
-<<<<<<< HEAD
         //let thumb = $('<img>').attr('src', modalData.thumbnail);
-=======
->>>>>>> 42a4b69f06dc27109f81ba1e7e7206bdd6ff1d8c
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg');
         let name = $('<h3>').text(modalData.name);
         let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);

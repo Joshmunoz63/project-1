@@ -100,6 +100,10 @@ h4{
     margin-bottom: 1rem;
     overflow: hidden;
 }
+
+#weatherInfo * {
+    z-index: 1;
+}
 /*
 .modal {
     display: none; /* Hidden by default 
@@ -117,7 +121,6 @@ h4{
     background-color: rgba(0, 82, 27, 0.99); /* Opacity if supported *
 }
 */
-
 /* The Modal (background) */
 #trailModal {
     display: none; /* Hidden by default */
@@ -149,13 +152,12 @@ h4{
     transform: translate(-50%, -50%);
     font-family: 'Lexend Giga', sans-serif;
   }
-
   .trailImg{
     width: 150px;
   }
-.trailImg {
+  .trailImg {
     width: 50px;
-}
+  }
   
 /*--------\
 | ON LOAD |

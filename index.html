@@ -26,9 +26,12 @@
 </head>
 
 <body>
-  <!-- this is the header -->
+  <!-- Background image -->
   <div class="background"></div>
+
   <div class="content">
+
+    <!-- Container for jumbotron -->
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
@@ -38,7 +41,9 @@
           </div>
         </div>
       </div>
+    <!-- End of container for jumbotron -->
     </div>
+
     <!-- this is the form on the homepage -->
     <div class="container" id="page.main">
       <div class="row">
@@ -46,41 +51,56 @@
           <div class="card" id="sign-in">
             <div class="card-header">Where To?</div>
             <div class="card-body">
+
               <form>
                 <div class="row">
                   <div class="col-lg-12 col-md-10 col-sm-6">
                     <label for="state">State:</label>
                     <input class="form-control" type="text" id="state" placeholder="AZ">
                   </div>
+                <!-- End of row for State -->
                 </div>
                 <br>
+
                 <div class="row">
                   <div class="col-lg-12 col-md-10 col-sm-6">
                     <label for="name">City:</label>
                     <input class="form-control" type="text" id="name" placeholder="Phoenix">
                   </div>
+                <!-- End of row for city -->
                 </div>
                 <br>
+
                 <div class="row">
                   <div class="col-lg-12 col-md-10 col-sm-6">
                     <label for="date">Dates:</label>
                     <input class="form-control" type="date" id="date" placeholder="08/20/2019">
                   </div>
+                <!-- End of row for date -->
                 </div>
                 <br>
+              <!-- End of data entry form -->
               </form>
+
               <button type="submit" class="btn btn-primary" id="search">Search🔎</button>
               <br>
+
+              <!-- Display for error message -->
               <div class="col-lg-12 col-md-10 col-sm-6">
                 <p class="wrongDate"></p>
               </div>
+
+            <!-- End of card-body -->
             </div>
+          <!-- End of card -->
           </div>
+        <!-- End of column -->
         </div>
+      <!-- End of row -->
       </div>
+    <!-- End of container for form -->
     </div>
 
-    <!-- End of container -->
 
 
     <!-- View contains trail cards -->
@@ -88,11 +108,12 @@
 
       <div class="row" id="weatherInfo">
 
+      <!-- End of row for weather data -->
       </div>
 
       <div class="row" id="trailList">
 
-        <!-- End of row -->
+      <!-- End of row for trail data -->
       </div>
     </div>
 
@@ -106,7 +127,9 @@
       <!-- End of modal -->
     </div>
 
+  <!-- End of container -->
   </div>
+
   <!-- our script links -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="./assets/javascript/project-1-app.js"></script>
