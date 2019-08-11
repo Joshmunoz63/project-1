@@ -237,7 +237,7 @@ $(document).ready(function () {
 
     function weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3) {
 
-        var cardCont = $('<div>').addClass('card-container');
+        var cardCont = $('<div>').addClass('card-container col-lg-2 col-md-4 col-sm-12');
         var cardWrap = $('<div>').addClass('card-wrapper').attr('id', dayOFWeek);
 
         for (var Y = 0; Y < dataForUse[U].length; Y++) {
@@ -255,10 +255,11 @@ $(document).ready(function () {
                 tempValue = $('<p>').addClass('temp').text("Temp:" + dataForUse[U][Y].main.temp);
             }
 
+            // weather conditions
             if (dataForUse[U][Y].weather[0].main == "Rain") {
-                var weatherValue = $('<p>').addClass('rainyWeather').text("Conditions: " + dataForUse[U][Y].weather[0].main);
+                var weatherValue = $('<p>').addClass('rainyWeather').text(dataForUse[U][Y].weather[0].main);
             } else {
-                weatherValue = $('<p>').addClass('weather').text("Conditions: " + dataForUse[U][Y].weather[0].main);
+                weatherValue = $('<p>').addClass('weather').text(dataForUse[U][Y].weather[0].main);
             }
             // Append line items to container and wrapper.
             $(cardWrap).append(time, tempValue, weatherValue);
@@ -499,7 +500,8 @@ $(document).ready(function () {
 
         // Geocode AJAX call is made only when search button is clicked, so we can sequentially call other AJAX calls from within.
         
-        var currentDate = moment();
+        var currentDate = moment().startOf('day').subtract(1, 'd');
+        console.log('current time is '+ currentDate);
 
         // May need to fine-tune.
         var currentDatePlus5 = moment(currentDate).add(6,"days");
@@ -509,6 +511,7 @@ $(document).ready(function () {
         console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
         console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
         var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
+        //var checkInBetween = moment(userInputDate).isSameOrBefore(currentDate,currentDatePlus5);
         console.log(checkInBetween);
 
         if(checkInBetween == true) {
@@ -573,9 +576,22 @@ $(document).ready(function () {
 
 
         // Flesh out this part for Like/Dislike buttons.
-        let like = $('<div>').addClass('like');
-        let dislike = $('<div>').addClass('dislike');
+        let like = $('<div>').addClass('like').attr({width:'10px', background:'green'});
+        let dislike = $('<div>').addClass('dislike').attr({width:'10px', background:'red'});
         let internalRate = $('<div>').append(like, dislike);
+/*
+
+        // Creates local "temporary" object for holding train data
+        var newTrain = {
+            name: trainName,
+            dest: destination,
+            first: first,
+            freq: freq
+        };
+
+        // Uploads train data to the database
+        database.ref().push(newTrain);
+*/
 
 
         //$('#trailContent').append(thumb, name, diff, desc, dir, site);
