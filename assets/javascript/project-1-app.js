@@ -571,8 +571,15 @@ $(document).ready(function () {
         let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
         //let site = $('<a>').attr('href', modalData.url).text(modalData.url);
 
+
+        // Flesh out this part for Like/Dislike buttons.
+        let like = $('<div>').addClass('like');
+        let dislike = $('<div>').addClass('dislike');
+        let internalRate = $('<div>').append(like, dislike);
+
+
         //$('#trailContent').append(thumb, name, diff, desc, dir, site);
-        $('#trailContent').append(site, name, diff, desc, dir);
+        $('#trailContent').append(site, name, diff, desc, dir, internalRate);
 
         $('#trailModal').show();
 
