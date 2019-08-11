@@ -59,8 +59,16 @@ $(document).ready(function () {
 
         let today = now.getFullYear()+"-"+(month)+"-"+(day);
         $('#date').val(today).attr('placeholder', moment().format('MM/DD/YYYY'));
-    };
+
+//        updateMaxDate(today);
+    }
     
+    // Call this to update date input's max date. 
+    // ***** Redundant if validating after input ***** //
+    function updateMaxDate(today) {
+        console.log("Updating max date input...");
+        $('#date').attr('max', moment().add('5', 'days').format('YYYY-MM-DD'));
+    }
 
     // Call this to get current location.
     function getLocation() {
@@ -496,10 +504,11 @@ $(document).ready(function () {
         } else {
             console.log("False!");
             $("#date").addClass("is-invalid");
-            $(".errorMessage").text("Please choose a date within 5 days.");
+            $(".errorMessage").text("Please choose one of the next 5 days.").attr('id', 'showError');
+            setTimeout(() => {
+                $(".errorMessage").text('').attr('id', '');
+            }, 5500);
         }
-
-        // search animation
         
     });
     
@@ -533,10 +542,14 @@ $(document).ready(function () {
 //             let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
 //         }
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
+        let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
 
-        let site = $('<a>').attr('href', modalData.url).addClass('imgLink').append(thumb);
         let name = $('<h3>').text(modalData.name);
-        let diff = $('<p>').text('DIFFICULTY: ' + modalData.difficulty);
+
+        // Capitalize first letter if not already.
+        let diffText = modalData.difficulty.replace(/^\w/, c => c.toUpperCase());
+        let diff = $('<p>').text('DIFFICULTY: ' + diffText);
+
         let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);
         let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
         //let site = $('<a>').attr('href', modalData.url).text(modalData.url);
@@ -563,6 +576,10 @@ $(document).ready(function () {
         }
     }
 
+    $(document).on('click', '#imgLink', function (event) {
+        event.preventDefault();
+        setTimeout(() => window.open($(this).attr('href')), 1000);
+    })
     
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     

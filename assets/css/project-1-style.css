@@ -150,7 +150,7 @@ h4 {
     padding: 10px;
     border: 1px solid #888;
     width: 90%;
-    height: 75%;
+    height: 80%;
     overflow: auto;
     /* center the contents */
     position: absolute;
@@ -165,7 +165,15 @@ h4 {
     max-width: 250px;
     height: auto;
   }
-.imgLink {
+  .trailImg:hover {
+    /*margin: 1rem auto 1.5rem;*/
+    max-width: 250px;
+    height: auto;
+    box-sizing: border-box;
+    border: 2px solid orange;
+  }
+
+#imgLink {
     margin: 1rem auto 1.5rem;
 }
 #infoCont {
@@ -235,11 +243,36 @@ h4 {
     animation-duration: 0.8s;
 }
 
+#showError {
+    font-size: 0.9rem;
+    color: lightgrey;
+    animation-name: highlightMsg;
+    animation-duration: 5s;
+}
+@keyframes highlightMsg {
+    0% {color: red;
+        font-weight: bolder;}
+    80% {color: grey;
+        font-weight: normal;}    
+    100% {
+        color: lightgrey;
+        font-weight: lighter;}
+}
+/*
+a { box-sizing: border-box; }
+a:hover {
+    box-sizing: border-box;
+    border: 2px solid orange;
+}
+*/
 /*------------\
 | MEDIA QUERY |
 \------------*/
 
 @media only screen and (max-width: 768px) {
+    .modal p {
+        font-size: 0.8rem;
+    }
     .trailImg {
         /* Use default size of thumbnails */
         max-width: 200px;
@@ -249,7 +282,9 @@ h4 {
     h1 {
         font-size: 50px;
     }
-
+    h3 { /* modal heading */
+        font-size: 1.5rem;
+    }
     h4 {
         font-size: 15px;
     }
