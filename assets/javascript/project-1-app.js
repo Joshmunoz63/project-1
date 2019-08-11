@@ -35,11 +35,70 @@ $(document).ready(function () {
 
     var holdFilterHours = [];
     var dataForUse = [];
-    // DOM //
-    // Declare connections with DOM as needed.
 
 
-    //Functions -----------------------------------------
+    // DOM Connections //
+    const signIn =  document.querySelector('#sign-in');
+    const jumboContainer = document.querySelector("#jumboCont");
+    const jumboContent = document.querySelector("#jumbotron");
+    const infoContainer = document.querySelector('#infoCont');
+
+
+    // Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyDKCCyMyN9zvULKn39PO9R_c2jYXF96SUs",
+        authDomain: "uta-cb-project-1.firebaseapp.com",
+        databaseURL: "https://uta-cb-project-1.firebaseio.com",
+        projectId: "uta-cb-project-1",
+        storageBucket: "",
+        messagingSenderId: "562769266637",
+        appId: "1:562769266637:web:273f52edb364aaf2"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+
+    /*------------\
+    |  FUNCTIONS  |
+    \------------*/
+
+    // Call this to update date input with today's date.
+    function updateDate() {
+        console.log("Updating date input with today...");
+
+        let now = new Date();
+
+        let day = ("0" + now.getDate()).slice(-2);
+        let month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        let today = now.getFullYear()+"-"+(month)+"-"+(day);
+        $('#date').val(today).attr('placeholder', moment().format('MM/DD/YYYY'));
+
+    //        updateMaxDate(today);
+    }
+    
+    // Call this to update date input's max date. 
+    // ***** Redundant if validating after input ***** //
+    function updateMaxDate(today) {
+        console.log("Updating max date input...");
+        $('#date').attr('max', moment().add('5', 'days').format('YYYY-MM-DD'));
+    }
+
+    // Call this to get current location.
+    function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    // Call 
+    function showPosition(position) {
+        x.innerHTML = "Latitude: " + position.coords.latitude + 
+        "<br>Longitude: " + position.coords.longitude; 
+    };
+
 
     // AJAX call to Google Maps Javascript API's geocoder class to get latitude & longitude based on State and City.
     function queryGeocode() {
@@ -50,21 +109,34 @@ $(document).ready(function () {
             url: geocodeURL,
             crossDomain: true,
             success: function (geoData) {
-                lat = geoData.results[0].geometry.location.lat;
-                lon = geoData.results[0].geometry.location.lng;
-
+                
                 console.log(geoData);
                 console.log('Latitude obtained: ' + lat);
                 console.log('Longitude obtained: ' + lon);
                 console.log('');
+                
+                if (geoData.status != 'OK') {
+                    console.log('Unknown ERROR! ');
+                    showSignin();
+                } else {
+                lat = geoData.results[0].geometry.location.lat;
+                lon = geoData.results[0].geometry.location.lng;
 
                 console.log('Calling weather API now...')
                 callOpenWeatherAPI();
 
                 console.log('Calling trail API now...')
                 queryTrail();
+                }
+            },
+            error: function(error) {
+                console.log('ERROR! ' + error);
             }
-        });
+
+        })
+        .catch(function(error) {
+            console.log(error);
+        }) // End of AJAX call to Google Maps API.
     }
 
 
@@ -85,8 +157,12 @@ $(document).ready(function () {
             // testing storage
             savedarray = openWeatherAPICall.list;
             saveData(savedarray);
-        });
+        })
+        .catch(function(error) {
+            console.log(error);
+        }) // End of AJAX call to Open Weather API.
     }
+
 
     function saveData() {
         sixAM = savedarray.filter(function (savedarray) {
@@ -145,6 +221,10 @@ $(document).ready(function () {
         dataForUse.push(day4Forcast);
         dataForUse.push(day5Forcast);
         console.log(dataForUse);
+
+        // For reset
+        $('#weatherInfo').empty();
+
         for (var U = 0; U < 5; U++) {
             var dayOFWeek = moment(dataForUse[U][0].dt_txt);
             dayOFWeek = moment(dayOFWeek).format("dddd");
@@ -185,11 +265,13 @@ $(document).ready(function () {
             $(cardCont).append(cardWrap);
 
             // Append container to output.
-            $('#weatherInfo').append(dayOFWeekH3);
+            //$('#weatherInfo').append(dayOFWeekH3);
+            $(cardWrap).prepend(dayOFWeekH3);
             $('#weatherInfo').append(cardCont);
         }
     }
     
+
     // Make AJAX call to Find Bike Trails endpoint to import 
     function queryTrail() {
         console.log('Trail API received latitude of: ' + lat);
@@ -207,8 +289,11 @@ $(document).ready(function () {
                 "x-rapidapi-key": "cfbae3bd13msh660a849870aa5cap194a7fjsnd973bfb99523"
             }
         }).then(function (response) {
-            var data = response.data;
-            trailsData = data;
+            //testing var data = response.data;
+            // trailsData = data;
+
+            trailsData = response.data;
+            data = trailsData;
 
             console.log(response);
             console.log(trailsData);            
@@ -220,27 +305,48 @@ $(document).ready(function () {
             // ***** ADD A FUNCTION THAT STORES AJAX RESPONSE IN AN OBJECT. ***** //
             // THIS CAN ALSO REDUCE AJAX CALLS IF WE ALLOW USER TO REQUEST SORT/FILTER CHANGES.
 
+            if ( typeof response === 'null' ) {
+                //trailsData.length === 0 does not work
+                //!$.trim(response) doesn't work directly
+                console.log('Trail API Promise returned null');
+                debugger;
+                //showSignin();  not yet working.
+            } else {
+                //debugger;
+                for (let j = 0; j < data.length; j++) {
+                    // Output data to console.
+                    console.log('Object key: ' + j);
+                    console.log("State: " + data[j].region);
+                    console.log('Description: ' + data[j].description);
+                    console.log('Difficulty: ' + data[j].difficulty);
+                    console.log('Singletracks ID: ' + data[j].id);
+                    console.log('Trail name: ' + data[j].name);
+                    console.log('Length in miles: ' + data[j].length);
+                    console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
+                    console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
+    
+                    // Error-catch for blank thumbnail URL.
+                    if (data[j].thumbnail === "") {
+                        console.log('Thumbnail is considered blank...');
+                        data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
+                    } else {console.log('Thumbnail looks normal.')};
+    
+                    // Singletracks.com has Trail widget if higher res pic is needed, but may need to show other info.
+                    console.log('Profile page: ' + data[j].url); // URL to profile page.
+                    console.log(' ');
 
-            for (let j = 0; j < data.length; j++) {
-                // Call render function and pass trail data.
-                renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
-                // Optional: Write a function that stores data in an object first.
-
-                // Output data to console.
-                console.log('Object key: ' + j);
-                console.log("State: " + data[j].region);
-                console.log('Description: ' + data[j].description);
-                console.log('Difficulty: ' + data[j].difficulty);
-                console.log('Singletracks ID: ' + data[j].id);
-                console.log('Trail name: ' + data[j].name);
-                console.log('Length in miles: ' + data[j].length);
-                console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
-                console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
-                // Singletracks.com has Trail widget if higher res pic is needed, but may need to show other info.
-                console.log('Profile page: ' + data[j].url); // URL to profile page.
-                console.log(' ');
+                    // At this point, all AJAX calls succeeded.
+                    hideSignin();
+    
+                    // Call render function and pass trail data.
+                    renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
+                    
+                }
             }
 
+        })
+        .catch(function(error) {
+            console.log(error);
         }) // End of AJAX call to Trail API.
     } // End of function.
 
@@ -263,9 +369,9 @@ $(document).ready(function () {
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
         console.log(thumbnail);
-        var hr = $(thumbnail).append($('<hr>'));
+//        var hr = $(thumbnail).append($('<hr>'));
         var name = $('<h3>').addClass('header').text(na);
-        var hr = $(name).append($('<hr>'));
+  //      var hr = $(name).append($('<hr>'));
         var length = $('<p>').addClass('length').text(le + ' mi.');
         var rating = $('<p>').addClass('rating').text(ra + ' rating');
 
@@ -274,32 +380,95 @@ $(document).ready(function () {
 
 
         // Append line items to container and wrapper.
-        $(cardWrap).append(thumbnail, name, length, rating, hr);
-        $(cardCont).append(cardWrap,);
+        $(cardWrap).append(thumbnail, name, length, rating);
+        $(cardCont).append(cardWrap);
 
         // Append container to output.
-        $('#trailList').append(cardCont,);
+        $('#trailList').append(cardCont);
     }
 
-        /*---------------------\
-        | SHOW SIGNIN FUNCTION |
-        \---------------------*/
+
+    /*--------------------------\
+    | SIGNIN ANIMATION FUNCTION |
+    \--------------------------*/
+
     function showSignin() {
     // Sign in box animation
-    $("#sign-in").animate(
-        // FIRST ARG CSS PROPS
-        {
-            opacity: 1,
-            top: '0px'
-        },
-        // SECOND ARG TIME (MS)
-        1500);
+    // $("#sign-in").animate(
+    //     // FIRST ARG CSS PROPS
+    //     {
+    //         opacity: 1,
+    //         top: '0px'
+    //     },
+    //     // SECOND ARG TIME (MS)
+    //     700);
         
-        $(".jumbotron").animate({
-            opacity: 1,
-            top: '0px'
-        },1000);
+    //     $(".jumbotron").animate({
+    //         opacity: 1,
+    //         top: '0px'
+    //     },1000);
+
+        // For reset
+        $('#infoCont').hide();
+        jumboContainer.style.display.block;
+        //let node = document.getElementById('jumbotron');
+        
+        //jumbotron.removeEventListener('animationend', 'slideInDown')
+
+        //debugger;
+        $('#spacer').show();
+        
+        // Animate.CSS
+        signIn.classList.add('animated', 'slideInUp');
+        jumbotron.classList.add('animated', 'slideInDown');
+        //jumbotron.classList.add('animated', 'fast')
+
+        // WILL NEED RESET FOR INFOCONTAINER IF ALLOWING RESET.
+        //        infoContainer.classList.add('animated', 'animateContentIn');
     }
+
+    function hideSignin() {
+        // $("#sign-in").animate({
+        //     opacity: 0,
+        //     top: '1000px'
+        // },2000);
+
+        // $(".jumbotron").animate({
+        //     opacity: 0,
+        //     bottom: '10000px'
+        // },1000)
+
+        //debugger;
+
+        // Animate.CSS
+        signIn.classList.add('animated', 'slideOutDown');
+        signIn.addEventListener('animationend', function() {
+            $('#spacer').hide();
+            // AnimateCSS: remove any if present.
+            signIn.classList.remove('animated', 'slideOutDown')
+        });
+        jumbotron.classList.add('animated', 'slideOutUp');
+        jumbotron.addEventListener('animationend', function() {
+            $('#jumboCont').hide();
+            // AnimateCSS: remove any if present.
+            jumbotron.classList.remove('animated', 'slideOutUp');
+            //jumbotron.classList.remove('animated', 'fast');
+         });
+
+         $('#infoCont').show();
+         infoContainer.classList.add('animated', 'fadeIn');
+
+        //     
+        // signIn.addEventListener('animationend', function() { 
+        //     $('#sign-in').hide() });
+    }
+
+    // function imgError(image) {
+    //     image.onerror = "";
+    //     image.src = "https://images.singletracks.com/graphics/no_photo_750x500.png";
+    //     //"this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
+    //     return true;
+    // }
 
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
@@ -331,7 +500,10 @@ $(document).ready(function () {
         // Geocode AJAX call is made only when search button is clicked, so we can sequentially call other AJAX calls from within.
         
         var currentDate = moment();
-        var currentDatePlus5 = moment(currentDate).add(5,"days");
+
+        // May need to fine-tune.
+        var currentDatePlus5 = moment(currentDate).add(6,"days");
+        
         userInputDate = moment(userInputDate, "YYYY/MM/DD");
         console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
         console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
@@ -340,27 +512,20 @@ $(document).ready(function () {
         console.log(checkInBetween);
 
         if(checkInBetween == true) {
-            console.log("True!");
+            console.log("Date is within 5 days!");
 
-            $("#sign-in").animate({
-                opacity: 0,
-                top: '1000px'
-            },1000);
-    
-            $(".jumbotron").animate({
-                opacity: 0,
-                bottom: '10000px'
-            },1000);
+            //test hideSignin();
 
             queryGeocode();
             $("#date").removeClass("is-invalid");
         } else {
             console.log("False!");
             $("#date").addClass("is-invalid");
-            $(".wrongDate").text("Please choose a date within 5 days.");
+            $(".errorMessage").text("Please choose one of the next 5 days.").attr('id', 'showError');
+            setTimeout(() => {
+                $(".errorMessage").text('').attr('id', '');
+            }, 5500);
         }
-
-        // search animation
         
     });
     
@@ -380,16 +545,47 @@ $(document).ready(function () {
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
-        let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg');
-        let name = $('<h3>').text(modalData.name);
-        let diff = $('<p>').text('Difficulty: ' + modalData.difficulty);
-        let desc = $('<p>').text('Description: ' + modalData.description);
-        let dir = $('<p>').text('Directions: ' + modalData.directions);
-        let site = $('<a>').attr('href', modalData.url).text(modalData.url);
+        //let thumb = $('<img>').attr('src', modalData.thumbnail);
+//         if (modalData.thumbnail === "") {
+//             // Fallback image
+//             //let thumb = $('<img>').attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png').addClass('trailImg img-thumbnail');
+//             let thumb = $('<img>')
+//                 .attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png')
+//                 .on('error', imgError() )
+// //                "this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
+//                 //onerror: "imgError(" + this + ")"
+//                 .addClass('trailImg img-thumbnail');
+//         } else {
+//             let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
+//         }
+        let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
+        let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
 
-        $('#trailContent').append(thumb, name, diff, desc, dir, site);
+        let name = $('<h3>').text(modalData.name);
+
+        // Capitalize first letter if not already.
+        let diffText = modalData.difficulty.replace(/^\w/, c => c.toUpperCase());
+        let diff = $('<p>').text('DIFFICULTY: ' + diffText);
+
+        let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);
+        let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
+        //let site = $('<a>').attr('href', modalData.url).text(modalData.url);
+
+
+        // Flesh out this part for Like/Dislike buttons.
+        let like = $('<div>').addClass('like');
+        let dislike = $('<div>').addClass('dislike');
+        let internalRate = $('<div>').append(like, dislike);
+
+
+        //$('#trailContent').append(thumb, name, diff, desc, dir, site);
+        $('#trailContent').append(site, name, diff, desc, dir, internalRate);
 
         $('#trailModal').show();
+
+        // Animate.CSS on modal.
+        const animateModal =  document.querySelector('#trailModal');
+        animateModal.classList.add('animated', 'slideInDown');
     });
 
     // When the user clicks outside of the modal, close modal.
@@ -404,17 +600,24 @@ $(document).ready(function () {
         }
     }
 
+    $(document).on('click', '#imgLink', function (event) {
+        event.preventDefault();
+        setTimeout(() => window.open($(this).attr('href')), 1000);
+    })
     
     // Optional: ADD KEYBOARD NAVIGATION FUNCTION
     
 
         
-        
-        /*--------\
-        | ON LOAD |
-        \--------*/
-        
-        showSignin();
+    
+    /*--------\
+    | ON LOAD |
+    \--------*/
+
+    updateDate();
+    
+    showSignin();
+
 });
 
 

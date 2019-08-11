@@ -7,11 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Hiking Advisor</title>
 
-  <!-- Potential CDNs -->
-
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+  <!-- Animate.CSS Library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
   <!-- Moment.js Reference -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
@@ -21,78 +22,115 @@
     href="https://fonts.googleapis.com/css?family=Archivo+Black|Lexend+Exa|Lexend+Giga|Oswald|Rubik|Staatliches|Viga&display=swap"
     rel="stylesheet">
 
-  <!-- CSS -->
+  <!-- Code Firebase Real Time Database JS SDK -->
+  <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+
+  <!-- CSS -->  
   <link rel="stylesheet" href="./assets/css/project-1-style.css" />
 </head>
 
 <body>
-  <!-- this is the header -->
+  <!-- Background image -->
   <div class="background"></div>
+
   <div class="content">
-    <div class="container-fluid">
+
+    <!-- Container for jumbotron -->
+    <div class="container-fluid" id="jumboCont">
       <div class="row">
         <div class="col-lg-12">
-          <div class="jumbotron">
+          <div class="jumbotron animated slideInDown" id='jumbotron'>
             <h1>Hiking Advisor</h1>
             <h4>Going hiking? We'll help you choose a trail and date.</h4>
           </div>
         </div>
       </div>
+    <!-- End of container for jumbotron -->
     </div>
+
     <!-- this is the form on the homepage -->
     <div class="container" id="page.main">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-6" id="spacer">
           <div class="card" id="sign-in">
             <div class="card-header">Where To?</div>
             <div class="card-body">
+
               <form>
                 <div class="row">
                   <div class="col-lg-12 col-md-10 col-sm-6">
                     <label for="state">State:</label>
-                    <input class="form-control" type="text" id="state" placeholder="AZ">
+                    <input class="form-control" type="text" id="state" placeholder="TX" autocapitalize='on'>
                   </div>
+                <!-- End of row for State -->
                 </div>
                 <br>
+
                 <div class="row">
                   <div class="col-lg-12 col-md-10 col-sm-6">
                     <label for="name">City:</label>
-                    <input class="form-control" type="text" id="name" placeholder="Phoenix">
+                    <input class="form-control" type="text" id="name" placeholder="Houston">
                   </div>
+                <!-- End of row for city -->
                 </div>
                 <br>
+
                 <div class="row">
                   <div class="col-lg-12 col-md-10 col-sm-6">
-                    <label for="date">Dates:</label>
-                    <input class="form-control" type="date" id="date" placeholder="08/20/2019">
+                    <label for="date">Date:</label>
+                    <input class="form-control" type="date" id="date" placeholder="08/13/2019" max="08/18/2019">
+<!-- 
+                    <div class="md-form">
+                      <label for="date">Try me...</label>
+                      <input placeholder="Selected date" type="text" id="date" class="form-control datepicker" data-provide="datepicker">
+                    </div> -->
+
+                    <!-- <div class="input-group input-daterange">
+                        <input type="date" class="form-control" value="2012-04-05">
+                        <div class="input-group-addon">to</div>
+                        <input type="date" class="form-control" value="2012-04-19">
+                    </div> -->
+
+                  <!-- End of column for date -->
                   </div>
+                <!-- End of row for date -->
                 </div>
                 <br>
+              <!-- End of data entry form -->
               </form>
+
               <button type="submit" class="btn btn-primary" id="search">Search🔎</button>
               <br>
+
+              <!-- Display for error message -->
               <div class="col-lg-12 col-md-10 col-sm-6">
-                <p class="wrongDate"></p>
+                <p class="errorMessage"></p>
               </div>
+
+            <!-- End of card-body -->
             </div>
+          <!-- End of card -->
           </div>
+        <!-- End of column -->
         </div>
+      <!-- End of row -->
       </div>
+    <!-- End of container for form -->
     </div>
 
-    <!-- End of container -->
 
 
     <!-- View contains trail cards -->
-    <div class="container">
+    <div class="container" id='infoCont'>
 
       <div class="row" id="weatherInfo">
 
+      <!-- End of row for weather data -->
       </div>
 
       <div class="row" id="trailList">
 
-        <!-- End of row -->
+      <!-- End of row for trail data -->
       </div>
     </div>
 
@@ -106,7 +144,9 @@
       <!-- End of modal -->
     </div>
 
+  <!-- End of container -->
   </div>
+
   <!-- our script links -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="./assets/javascript/project-1-app.js"></script>
