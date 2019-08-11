@@ -48,6 +48,20 @@ $(document).ready(function () {
     |  FUNCTIONS  |
     \------------*/
 
+    // Call this to update date input with today's date.
+    function updateDate() {
+        console.log("Updating date input with today...");
+
+        let now = new Date();
+
+        let day = ("0" + now.getDate()).slice(-2);
+        let month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        let today = now.getFullYear()+"-"+(month)+"-"+(day);
+        $('#date').val(today).attr('placeholder', moment().format('MM/DD/YYYY'));
+    };
+    
+
     // Call this to get current location.
     function getLocation() {
         if (navigator.geolocation) {
@@ -554,12 +568,15 @@ $(document).ready(function () {
     
 
         
-        
-        /*--------\
-        | ON LOAD |
-        \--------*/
-        
-        showSignin();
+    
+    /*--------\
+    | ON LOAD |
+    \--------*/
+
+    updateDate();
+    
+    showSignin();
+
 });
 
 
