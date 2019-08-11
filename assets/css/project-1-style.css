@@ -115,6 +115,20 @@ h4 {
 
 #weatherInfo p {
     margin-bottom: 0;
+.hotTemp {
+    background-color: crimson;
+}
+
+.coldTemp {
+    background-color: aquamarine;
+}
+
+.hourWrapper {
+    margin-top: 10px;
+}
+
+.icons { 
+    
 }
 /*
 .modal {
