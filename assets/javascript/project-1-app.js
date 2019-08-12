@@ -109,18 +109,18 @@ $(document).ready(function () {
             url: geocodeURL,
             crossDomain: true,
             success: function (geoData) {
-                
-                console.log(geoData);
-                console.log('Latitude obtained: ' + lat);
-                console.log('Longitude obtained: ' + lon);
-                console.log('');
-                
+                                
                 if (geoData.status != 'OK') {
                     console.log('Unknown ERROR! ');
                     showSignin();
                 } else {
                 lat = geoData.results[0].geometry.location.lat;
                 lon = geoData.results[0].geometry.location.lng;
+
+                console.log(geoData);
+                console.log('Latitude obtained: ' + lat);
+                console.log('Longitude obtained: ' + lon);
+                console.log('');
 
                 console.log('Calling weather API now...')
                 callOpenWeatherAPI();
@@ -258,17 +258,17 @@ $(document).ready(function () {
             var tempValue;
             
             // Temperature warning
-            if (dataForUse[U][Y].main.temp > 90) {
+            if (dataForUse[U][Y].main.temp >= 90) {
                 tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
                 $(hourWrap).addClass("hotTemp");
-            } else if(dataForUse[U][Y].main.temp < 50) {
+            } else if(dataForUse[U][Y].main.temp <= 50) {
                 tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
                 $(hourWrap).addClass("coldTemp");
             } else {
                 tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
             }
             
-            // Hazardous weather conditions
+            // Hazardous weather conditions (https://openweathermap.org/weather-conditions)
             if (dataForUse[U][Y].weather[0].main == "Rain") {
                 var weatherValue = $('<p>').addClass('weatherCond').text(dataForUse[U][Y].weather[0].main);
                 var weatherIcon = $('<img class="wIcon" id ="icons" src="http://openweathermap.org/img/wn/' + dataForUse[U][Y].weather[0].icon + '@2x.png" />');
@@ -347,22 +347,21 @@ $(document).ready(function () {
                     console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
                     console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
     
-                    // Error-catch for blank thumbnail URL.
+                    // Error-check for blank thumbnail URL.
                     if (data[j].thumbnail === "") {
                         console.log('Thumbnail is considered blank...');
                         data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
                     } else {console.log('Thumbnail looks normal.')};
-    
+                    //debugger;
                     // Singletracks.com has Trail widget if higher res pic is needed, but may need to show other info.
                     console.log('Profile page: ' + data[j].url); // URL to profile page.
                     console.log(' ');
 
-                    // At this point, all AJAX calls succeeded.
+                    // At this point, all AJAX calls succeeded. Prevent additional input.
                     hideSignin();
     
                     // Call render function and pass trail data.
                     renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
-                    
                 }
             }
 
@@ -373,14 +372,8 @@ $(document).ready(function () {
     } // End of function.
 
     
-
-    // DATA PROCESSING FUNCTION //
-    // Filter, evaluate and reorganize data before rendering.
-
-
-    // SUGGEST & RENDER FUNCTION //
+    // RENDER FUNCTION //
     // Take reorganized data and output to display.
-    // Optional: Allow re-sorting of output by specific attribute.
 
     // Call this to render trail cards.
     function renderCard(ke, na, th, ra, le) {
@@ -390,16 +383,9 @@ $(document).ready(function () {
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
-        console.log(thumbnail);
-//        var hr = $(thumbnail).append($('<hr>'));
         var name = $('<h3>').addClass('header').text(na);
-  //      var hr = $(name).append($('<hr>'));
         var length = $('<p>').addClass('length').text(le + ' mi.');
         var rating = $('<p>').addClass('rating').text(ra + ' rating');
-
-
-        // ***** ADD FUNCTION THAT ADDRESSES MISSING INFO (e.g. Thumbnail) ***** //
-
 
         // Append line items to container and wrapper.
         $(cardWrap).append(thumbnail, name, length, rating);
@@ -433,11 +419,9 @@ $(document).ready(function () {
         // For reset
         $('#infoCont').hide();
         jumboContainer.style.display.block;
-        //let node = document.getElementById('jumbotron');
-        
+        //let node = document.getElementById('jumbotron');        
         //jumbotron.removeEventListener('animationend', 'slideInDown')
 
-        //debugger;
         $('#spacer').show();
         
         // Animate.CSS
@@ -450,6 +434,7 @@ $(document).ready(function () {
     }
 
     function hideSignin() {
+        // Animating with jQuery
         // $("#sign-in").animate({
         //     opacity: 0,
         //     top: '1000px'
@@ -459,8 +444,6 @@ $(document).ready(function () {
         //     opacity: 0,
         //     bottom: '10000px'
         // },1000)
-
-        //debugger;
 
         // Animate.CSS
         signIn.classList.add('animated', 'slideOutDown');
@@ -480,17 +463,8 @@ $(document).ready(function () {
          $('#infoCont').show();
          infoContainer.classList.add('animated', 'fadeIn');
 
-        //     
-        // signIn.addEventListener('animationend', function() { 
-        //     $('#sign-in').hide() });
     }
 
-    // function imgError(image) {
-    //     image.onerror = "";
-    //     image.src = "https://images.singletracks.com/graphics/no_photo_750x500.png";
-    //     //"this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
-    //     return true;
-    // }
 
     // Optional: STORAGE FUNCTION //
     // Optional: Allow saving/tracking of multiple query data.
@@ -510,17 +484,12 @@ $(document).ready(function () {
     \------------------------*/
     $('.btn').on('click', function (event) {
         event.preventDefault();
-
+        // Clean up user input.
         state = $('#state').val().trim();
         cityName = $('#name').val().trim();
         userInputDate = $('#date').val().trim();
 
-
-        // ***** ADD VALIDATION FUNCTIONS FOR ALL ENTRY ***** //
-
-
-        // Geocode AJAX call is made only when search button is clicked, so we can sequentially call other AJAX calls from within.
-        
+        // Geocode AJAX call is made only when search button is clicked, other AJAX calls can be made from within.
         var currentDate = moment().startOf('day').subtract(1, 'd');
         console.log('current time is '+ currentDate);
 
@@ -539,15 +508,14 @@ $(document).ready(function () {
 
         if(checkInBetween == true) {
             console.log("Date is within 5 days!");
-
-            //test hideSignin();
-
+            // Get latitude & longtidude of target area.
             queryGeocode();
             $("#date").removeClass("is-invalid");
         } else {
             console.log("False!");
             $("#date").addClass("is-invalid");
             $(".errorMessage").text("Please choose one of the next 5 days.").attr('id', 'showError');
+            // Timer used for error message animation.
             setTimeout(() => {
                 $(".errorMessage").text('').attr('id', '');
             }, 5500);
@@ -564,6 +532,7 @@ $(document).ready(function () {
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
         
+        // This id is same as index# in trailsData object.
         let id = $(this).attr('id');
         let modalData = trailsData[id];
         
@@ -571,19 +540,19 @@ $(document).ready(function () {
         //test $('#trailModal').empty();
         $('#trailContent').empty();
         
-        //let thumb = $('<img>').attr('src', modalData.thumbnail);
-//         if (modalData.thumbnail === "") {
-//             // Fallback image
-//             //let thumb = $('<img>').attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png').addClass('trailImg img-thumbnail');
-//             let thumb = $('<img>')
-//                 .attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png')
-//                 .on('error', imgError() )
-// //                "this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
-//                 //onerror: "imgError(" + this + ")"
-//                 .addClass('trailImg img-thumbnail');
-//         } else {
-//             let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
-//         }
+        // let thumb = $('<img>').attr('src', modalData.thumbnail);
+        // if (modalData.thumbnail === "") {
+        //     // Fallback image
+        //     //let thumb = $('<img>').attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png').addClass('trailImg img-thumbnail');
+        //     let thumb = $('<img>')
+        //         .attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png')
+        //         .on('error', imgError() )
+        //     //    "this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
+        //         //onerror: "imgError(" + this + ")"
+        //         .addClass('trailImg img-thumbnail');
+        // } else {
+        //     let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
+        // }
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
         let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
 
@@ -595,15 +564,16 @@ $(document).ready(function () {
 
         let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);
         let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
-        //let site = $('<a>').attr('href', modalData.url).text(modalData.url);
 
 
         // Flesh out this part for Like/Dislike buttons.
-        let like = $('<div>').addClass('like').attr({width:'10px', background:'green'});
-        let dislike = $('<div>').addClass('dislike').attr({width:'10px', background:'red'});
-        let internalRate = $('<div>').append(like, dislike);
+        let like = $('<img>').addClass('like').attr({src:'./assets/images/likeIcon.png'});
+        let likeBtn = $('<a>').addClass('popularityBtn').append(like);//.attr('href')
+        let dislike = $('<img>').addClass('dislike').attr('src', './assets/images/dislikeIcon.png');
+        let dislikeBtn = $('<a>').addClass('popularityBtn').append(dislike);//.attr('href')
+        let popularity = $('<div>').addClass('popularity').attr('id', trailsData[id]['id']).append(likeBtn, dislikeBtn);
+        
 /*
-
         // Creates local "temporary" object for holding train data
         var newTrain = {
             name: trainName,
@@ -617,8 +587,8 @@ $(document).ready(function () {
 */
 
 
-        //$('#trailContent').append(thumb, name, diff, desc, dir, site);
-        $('#trailContent').append(site, name, diff, desc, dir, internalRate);
+        $('#trailContent').append(thumb, name, diff, desc, dir, site);
+        $('#trailContent').append(site, name, diff, desc, dir, popularity);
 
         $('#trailModal').show();
 
