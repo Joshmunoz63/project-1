@@ -379,7 +379,7 @@ $(document).ready(function () {
     function renderCard(ke, na, th, ra, le) {
         // Create divs that contain trail info.
         var cardCont = $('<div>').addClass('card-container col col-lg-2 col-md-4 col-sm-12 trailCont');
-        var cardWrap = $('<div>').addClass('card-wrapper trailWrap').attr('id', ke);
+        var cardWrap = $('<div>').addClass('card-wrapperTrail trailWrap').attr('id', ke);
         
         // Create trail line items.
         var thumbnail = $('<img>').addClass('image').attr('src', th);
@@ -529,7 +529,7 @@ $(document).ready(function () {
     \-----------------------*/
 
     // Populate and display a trail modal.
-    $(document.body).on('click', '.card-wrapper', function (event) {
+    $(document.body).on('click', '.card-wrapperTrail', function (event) {
         event.preventDefault();
         
         // This id is same as index# in trailsData object.
