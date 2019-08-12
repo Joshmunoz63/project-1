@@ -36,6 +36,10 @@ $(document).ready(function () {
     var holdFilterHours = [];
     var dataForUse = [];
 
+    // For popularity tracking in modal.
+    var likeCounter = 0;
+    var dislikeCounter = 0;
+
 
     // DOM Connections //
     const signIn =  document.querySelector('#sign-in');
@@ -54,9 +58,13 @@ $(document).ready(function () {
         messagingSenderId: "562769266637",
         appId: "1:562769266637:web:273f52edb364aaf2"
     };
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     
+    // Create a variable to reference the database
+    var database = firebase.database();
+
 
     /*------------\
     |  FUNCTIONS  |
@@ -93,11 +101,115 @@ $(document).ready(function () {
         }
     }
 
-    // Call 
-    function showPosition(position) {
-        x.innerHTML = "Latitude: " + position.coords.latitude + 
-        "<br>Longitude: " + position.coords.longitude; 
-    };
+    // // Call this to get user's current location
+    // function showPosition(position) {
+    //     x.innerHTML = "Latitude: " + position.coords.latitude + 
+    //     "<br>Longitude: " + position.coords.longitude; 
+    // };
+
+// one time
+//     return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+//         var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+
+
+    // This callback keeps the page updated when a value changes in firebase.
+    function listenerDB(trailId) {
+        var refOne = database.ref('trails/' + trailId);
+        refOne.on(
+            "value",
+            function(snapshot) {
+                // Use Firebase method to determine whether DataSnapshot is null.
+                if (snapshot.exists()) {
+                    console.log(snapshot);
+                    console.log('Value from db: '+ snapshot.val());
+
+                    nestedLike(refOne);
+                }
+
+                    // // Change the value of our likeCounter to match the value in the database
+                    // if (refOne.child('likeCount').exists()) {
+                    //     console.log('DB shows like count of ' + snapshot.likeCount.val());
+                    //     likeCounter = snapshot.likeCount.val();
+                    // } else { 
+                    //     likeCounter = 0;
+                    // }
+                    // $("#likeDisplay").text(likeCounter);
+
+                    // if (refOne.child('dislikeCount').exists()) {
+                    //     console.log('DB shows dislike count of ' + snapshot.dislikeCount.val());
+                    //     dislikeCounter = snapshot.dislikeCount.val();
+                    // } else {
+                    //     dislikeCounter = 0;
+                    // }
+                    // $("#dislikeDisplay").text(dislikeCounter);
+
+                    // // Console Log the value of the Counters after update.
+                    // console.log('Like count is now:' + likeCounter);
+                    // console.log('Dislike count is now: ' + dislikeCounter);
+                    
+                    // Update DB variables if not initiated.
+                    database.ref('trails/' + trailId).set({
+                        likeCount: likeCounter,
+                        dislikeCount: dislikeCounter
+                    })
+
+                // } else {
+                //     console.log('Target Snapshot is null...');
+                // }
+
+                // Change the HTML using jQuery to reflect the updated Counter value
+                
+                
+                // Alternate solution to the above line
+                // $("#click-value").html(clickCounter);
+                // debugger;
+                
+              // If any errors are experienced, log them to console.
+            // },
+            // function(errorObject) {
+            //   console.log("The read failed: " + errorObject.code);
+            // }
+        });
+    }
+
+    function nestedLike(likePath) {
+        var refTwo = database.ref(likePath + '/likeCount');
+        refTwo.on(
+            "value",
+            function(snapshot) {
+                if (snapshot.exists()) {
+                    console.log(snapshot);
+                    console.log('Value from db: '+ snapshot.val());
+                    nestedLike(refOne);
+                } else {
+                    likeCounter = 0;
+                }
+
+            }
+        )
+    }
+
+    // Save new value to Firebase
+    function updateDB(trailId, choice) {
+        if (choice === 'like') {
+            likeCounter++;
+            database.ref('trails/' + trailId).set({
+                likeCount: likeCounter,
+                dislikeCount: dislikeCounter
+            })
+        }
+        else if (choice === 'dislike') {
+            dislikeCounter++;
+            database.ref('trails/' + trailId).set({
+                likeCount: likeCounter,
+                dislikeCount: dislikeCounter
+            })
+        }
+        else {
+            console.log("You shouldn't see this ever.");
+        }
+    }
+
 
 
     // AJAX call to Google Maps Javascript API's geocoder class to get latitude & longitude based on State and City.
@@ -532,70 +644,57 @@ $(document).ready(function () {
     $(document.body).on('click', '.card-wrapper', function (event) {
         event.preventDefault();
         
-        // This id is same as index# in trailsData object.
+        // This id is index# in trailsData object.
         let id = $(this).attr('id');
+
         let modalData = trailsData[id];
-        
-        console.log(modalData)
-        //test $('#trailModal').empty();
+        console.log(modalData);
+
+        // Reset moving parts.
         $('#trailContent').empty();
         
-        // let thumb = $('<img>').attr('src', modalData.thumbnail);
-        // if (modalData.thumbnail === "") {
-        //     // Fallback image
-        //     //let thumb = $('<img>').attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png').addClass('trailImg img-thumbnail');
-        //     let thumb = $('<img>')
-        //         .attr('src', 'https://images.singletracks.com/graphics/no_photo_750x500.png')
-        //         .on('error', imgError() )
-        //     //    "this.src='http://lorempixel.com/output/city-q-c-300-200-10.jpg'"
-        //         //onerror: "imgError(" + this + ")"
-        //         .addClass('trailImg img-thumbnail');
-        // } else {
-        //     let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
-        // }
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
         let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
-
+        let siteId = $('<p>').text('SINGLETRACK ID: ' + trailsData[id]['id']);
         let name = $('<h3>').text(modalData.name);
 
         // Capitalize first letter if not already.
         let diffText = modalData.difficulty.replace(/^\w/, c => c.toUpperCase());
         let diff = $('<p>').text('DIFFICULTY: ' + diffText);
-
         let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);
         let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
 
-
-        // Flesh out this part for Like/Dislike buttons.
+        // Like button.
         let like = $('<img>').addClass('like').attr({src:'./assets/images/likeIcon.png'});
-        let likeBtn = $('<a>').addClass('popularityBtn').append(like);//.attr('href')
+        let likeDisp = $('<div>').attr('id', 'likeDisplay').text('');
+        let likeBtn = $('<a>').addClass('popularityBtn').append(like, likeDisp);//.attr('href')
+
+        // Dislike button.
+        let dislikeDisp = $('<div>').attr('id', 'dislikeDisplay').text('');
         let dislike = $('<img>').addClass('dislike').attr('src', './assets/images/dislikeIcon.png');
-        let dislikeBtn = $('<a>').addClass('popularityBtn').append(dislike);//.attr('href')
+        let dislikeBtn = $('<a>').addClass('popularityBtn').append(dislike, dislikeDisp);//.attr('href')
+
+        // Like/Dislike counter displays.
         let popularity = $('<div>').addClass('popularity').attr('id', trailsData[id]['id']).append(likeBtn, dislikeBtn);
-        
-/*
-        // Creates local "temporary" object for holding train data
-        var newTrain = {
-            name: trainName,
-            dest: destination,
-            first: first,
-            freq: freq
-        };
 
-        // Uploads train data to the database
-        database.ref().push(newTrain);
-*/
+        // Initialize listener for this trail's table in db.
+        listenerDB(trailsData[id]['id']);
 
-
-        $('#trailContent').append(thumb, name, diff, desc, dir, site);
-        $('#trailContent').append(site, name, diff, desc, dir, popularity);
-
+        // Construct and display the trail modal.
+        $('#trailContent').append(site, name, siteId, diff, desc, dir, popularity);
         $('#trailModal').show();
 
         // Animate.CSS on modal.
         const animateModal =  document.querySelector('#trailModal');
         animateModal.classList.add('animated', 'slideInDown');
         animateModal.classList.add('animated', 'faster');
+    });
+
+    // Updating like/dislike counters if clicked.
+    $(document.body).on('click', '.popularityBtn', function (event) {
+        let singletrackId = $(this).parent().attr('id');
+        let action = $(this).children().attr('class');
+        updateDB(singletrackId, action);
     });
 
     // When the user clicks outside of the modal, close modal.
@@ -610,14 +709,11 @@ $(document).ready(function () {
         }
     }
 
+    // When thumbnail is pressed, apply small delay then open link in new window.
     $(document).on('click', '#imgLink', function (event) {
         event.preventDefault();
         setTimeout(() => window.open($(this).attr('href')), 1000);
-    })
-    
-    // Optional: ADD KEYBOARD NAVIGATION FUNCTION
-    
-
+    })    
         
     
     /*--------\
@@ -625,7 +721,6 @@ $(document).ready(function () {
     \--------*/
 
     updateDate();
-    
     showSignin();
 
 });
