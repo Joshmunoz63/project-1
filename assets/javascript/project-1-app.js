@@ -211,7 +211,8 @@ $(document).ready(function () {
 
     function weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3) {
 
-        var cardCont = $('<div>').addClass('container card-container col-lg-2 col-md-4 col-sm-12 weatherCont');
+        //var cardCont = $('<div>').addClass('container card-container col-lg-2 col-md-4 col-sm-12 weatherCont');
+        var cardCont = $('<div>').addClass('container card-container col-lg-auto col-md-4 col-sm-12 weatherCont');
         var cardWrap = $('<div>').addClass('card-wrapper').attr('id', dayOFWeek);
         
 
@@ -222,8 +223,12 @@ $(document).ready(function () {
             console.log(dataForUse[U][Y].main.temp_min);
             console.log(dataForUse[U][Y].weather[0].main);
 
+            // Truncate digits past decimal.
+            dataForUse[U][Y].main.temp = dataForUse[U][Y].main.temp.toString().split('.')[0];
+
+
             // Displaying time block in a day
-            var holdTimeANDDate = moment(dataForUse[U][Y].dt_txt).format('YYYY-MM-DD HH:mm A');
+            var holdTimeANDDate = moment(dataForUse[U][Y].dt_txt).format('YYYY-MM-DD hh:mm A');
             var holdTime = holdTimeANDDate.split(" ",10);
             var hourWrap = $('<div>').addClass('hourWrapper').attr('id', holdTime);
             var time = $('<p>').addClass('time').text(holdTime[1] + ' ' + holdTime[2]);
@@ -232,13 +237,13 @@ $(document).ready(function () {
             
             // Temperature warning
             if (dataForUse[U][Y].main.temp >= 90) {
-                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
+                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F').attr('tempText', 'hot');
                 $(hourWrap).addClass("hotTemp");
             } else if(dataForUse[U][Y].main.temp <= 50) {
-                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
+                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F').attr('tempText', 'cold');
                 $(hourWrap).addClass("coldTemp");
             } else {
-                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F');
+                tempValue = $('<p>').text(dataForUse[U][Y].main.temp + ' °F').attr('tempText', 'normal');
             }
             
             // Hazardous weather conditions (https://openweathermap.org/weather-conditions)
@@ -341,7 +346,7 @@ $(document).ready(function () {
     // Call this to render trail cards.
     function renderCard(ke, na, th, ra, le) {
         // Create divs that contain trail info.
-        var cardCont = $('<div>').addClass('card-container col col-lg-2 col-md-4 col-sm-12 trailCont');
+        var cardCont = $('<div>').addClass('card-container col-lg-2 col-md-4 col-sm-12 trailCont');
         var cardWrap = $('<div>').addClass('card-wrapperTrail trailWrap').attr('id', ke);
         
         // Create trail line items.
@@ -505,8 +510,13 @@ $(document).ready(function () {
         let siteId = $('<p>').text('SINGLETRACK ID: ' + trailsData[id]['id']);
         let name = $('<h3>').text(modalData.name);
 
-        // Capitalize first letter of difficulty.
-        let diffText = modalData.difficulty.replace(/^\w/, c => c.toUpperCase());
+        // If difficulty value exists, capitalize its first letter.
+        let diffText = '';
+        if (modalData.difficulty === null) {
+            diffText = 'Unknown';
+        } else {
+            diffText = modalData.difficulty.replace(/^\w/, c => c.toUpperCase());
+        }
 
         let diff = $('<p>').text('DIFFICULTY: ' + diffText);
         let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);

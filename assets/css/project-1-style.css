@@ -144,6 +144,11 @@ h4 {
     display: inline-block;
 }
 
+[tempText] {
+    /* 1.1rem seems largest possible w/o breaking line on iPad viewport */
+    text-indent: 1.1rem;
+}
+
 .wIcon {
     width: 2.5rem;
     padding: 0;
@@ -186,7 +191,7 @@ h4 {
 }
 
 .trailCont {
-    padding: 0.5%;
+    padding: 0.3%;
 }
 
 .trailWrap:hover {
@@ -363,7 +368,7 @@ a>img:hover{
 \------------*/
 
 /* For medium or less size */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 425px) {
     .modal p {
         font-size: 0.8rem;
     }
@@ -385,4 +390,12 @@ a>img:hover{
     .card-container {
         min-width: 100%;
     }    
+}
+
+/* Small gaps in weather div looks poor in large viewports */
+@media only screen and (min-width: 1024px) {
+    [tempText] {
+        /* 1.1rem seems largest possible w/o breaking line on iPad viewport */
+        text-indent: 2rem;
+    }
 }
