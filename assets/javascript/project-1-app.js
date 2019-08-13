@@ -443,24 +443,21 @@ $(document).ready(function () {
         state = $('#state').val().trim();
         cityName = $('#name').val().trim();
         userInputDate = $('#date').val().trim();
+        // Reset fields.
+        $('#state, #name').val('');
 
-        // Geocode AJAX call is made only when search button is clicked, other AJAX calls can be made from within.
+        // Geocode AJAX call is made only when search button is clicked, so other API calls can be made from within.
         var currentDate = moment().startOf('day').subtract(1, 'd');
         console.log('current time is '+ currentDate);
 
-        // May need to fine-tune.
-        var currentDatePlus5 = moment(currentDate).add(6,"days");
-        
+        // Date entry validation
+        var currentDatePlus5 = moment(currentDate).add(5,"days");
         userInputDate = moment(userInputDate, "YYYY/MM/DD");
         console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
         console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
         console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
         var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
-        //var checkInBetween = moment(userInputDate).isSameOrBefore(currentDate,currentDatePlus5);
         console.log(checkInBetween);
-
-        queryGeocode();
-
         if(checkInBetween == true) {
             console.log("Date is within 5 days!");
             // Get latitude & longtidude of target area.
@@ -475,7 +472,6 @@ $(document).ready(function () {
                 $(".errorMessage").text('').attr('id', '');
             }, 5500);
         }
-        
     });
 
     /*-------------------------\
@@ -505,7 +501,6 @@ $(document).ready(function () {
         $('#trailContent').empty();
         
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
-        //let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
         let site = $('<a>').attr('href', modalData.url).addClass('imgLink').append(thumb);
         let siteId = $('<p>').text('SINGLETRACK ID: ' + trailsData[id]['id']);
         let name = $('<h3>').text(modalData.name);
