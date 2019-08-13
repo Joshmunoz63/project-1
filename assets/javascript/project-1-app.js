@@ -121,7 +121,6 @@ $(document).ready(function () {
     // AJAX call to Open Weather API to import weather data. (chance of rain, wind, humidity, etc.)
     function callOpenWeatherAPI() {
 
-        //openWeatherQueryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
         openWeatherQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&APPID=eaea7d39c63b0abce29025a25d630226";
 
         $.ajax({
@@ -129,10 +128,6 @@ $(document).ready(function () {
             method: "GET",
             crossDomain: true,
         }).then(function (openWeatherAPICall) {
-            // lat = openWeatherAPICall.city.coord.lat;
-            // lon = openWeatherAPICall.city.coord.lon;
-
-            // testing storage
             savedarray = openWeatherAPICall.list;
             saveData(savedarray);
         })
@@ -221,11 +216,11 @@ $(document).ready(function () {
         
 
         for (var Y = 0; Y < dataForUse[U].length; Y++) {
-            // console.log(dataForUse[U][Y].dt_txt);
-            // console.log(dataForUse[U][Y].main.temp);
-            // console.log(dataForUse[U][Y].main.temp_max);
-            // console.log(dataForUse[U][Y].main.temp_min);
-            // console.log(dataForUse[U][Y].weather[0].main);
+            console.log(dataForUse[U][Y].dt_txt);
+            console.log(dataForUse[U][Y].main.temp);
+            console.log(dataForUse[U][Y].main.temp_max);
+            console.log(dataForUse[U][Y].main.temp_min);
+            console.log(dataForUse[U][Y].weather[0].main);
 
             // Displaying time block in a day
             var holdTimeANDDate = moment(dataForUse[U][Y].dt_txt).format('YYYY-MM-DD HH:mm A');
@@ -265,7 +260,6 @@ $(document).ready(function () {
             $(cardCont).append(cardWrap);
 
             // Append container to output.
-            //$('#weatherInfo').append(dayOFWeekH3);
             $(cardWrap).prepend(dayOFWeekH3);
             $('#weatherInfo').append(cardCont);
         }
@@ -275,7 +269,6 @@ $(document).ready(function () {
     // Make AJAX call to Find Bike Trails endpoint to import 
     function queryTrail() {
         $('#trailList').empty();
-
         console.log('Trail API received latitude of: ' + lat);
         console.log('Trail API received longitude of: ' + lon);
         console.log('');
@@ -305,39 +298,40 @@ $(document).ready(function () {
             } else {
                 for (let j = 0; j < data.length; j++) {
                     // Output data to console.
-                    // console.log('Object key: ' + j);
-                    // console.log("State: " + data[j].region);
-                    // console.log('Description: ' + data[j].description);
-                    // console.log('Difficulty: ' + data[j].difficulty);
-                    // console.log('Singletracks ID: ' + data[j].id);
-                    // console.log('Trail name: ' + data[j].name);
-                    // console.log('Length in miles: ' + data[j].length);
-                    // console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
-                    // console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
-                    //
-                    // // Error-check for blank thumbnail URL.
-                    // if (data[j].thumbnail === "") {
-                    //     console.log('Thumbnail is considered blank...');
-                    //     data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
-                    // } else {console.log('Thumbnail looks normal.')};
-                    //
-                    // console.log('Profile page: ' + data[j].url); // URL to profile page.
-                    // console.log(' ');
-                    //
+                    console.log('Object key: ' + j);
+                    console.log("State: " + data[j].region);
+                    console.log('Description: ' + data[j].description);
+                    console.log('Difficulty: ' + data[j].difficulty);
+                    console.log('Singletracks ID: ' + data[j].id);
+                    console.log('Trail name: ' + data[j].name);
+                    console.log('Length in miles: ' + data[j].length);
+                    console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
+                    console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
+                    
+                    // Error-check for blank thumbnail URL.
+                    if (data[j].thumbnail === "") {
+                        console.log('Thumbnail is considered blank...');
+                        data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
+                    } else {console.log('Thumbnail looks normal.')};
+                    
+                    console.log('Profile page: ' + data[j].url); // URL to profile page.
+                    console.log(' ');
+                    
                     // At this point, all AJAX calls succeeded. Prevent additional input.
                     hideSignin();
     
                     // Call render function and pass trail data.
                     renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
-                }
-                
+                }   
             }
-            
         })
         .catch(function(error) {
             console.log(error);
         }) // End of AJAX call to Trail API.
+
+        // Reveal restart button.
         $('#restart').css('opacity', 1);
+
     } // End of function.
 
     
@@ -391,6 +385,7 @@ $(document).ready(function () {
         });        
     }
 
+
     function hideSignin() {
 
         // Animate.CSS to hide jumbotron and signin elements.
@@ -434,6 +429,7 @@ $(document).ready(function () {
 
     // DATA ENTRY EVENT HANDLERS //
     // This function handles events where the Submit button is clicked.
+
     /*------------------------\
     | ON CLICK FOR SEARCH BTN |
     \------------------------*/
@@ -456,8 +452,10 @@ $(document).ready(function () {
         console.log("Current Date: " + moment(currentDate).format("DD/MM/YYYY"));
         console.log("User Date: " + moment(userInputDate).format("DD/MM/YYYY"));
         console.log("Date 5 days from current Date: " + moment(currentDatePlus5).format("DD/MM/YYYY"));
+
         var checkInBetween = moment(userInputDate).isBetween(currentDate,currentDatePlus5);
         console.log(checkInBetween);
+
         if(checkInBetween == true) {
             console.log("Date is within 5 days!");
             // Get latitude & longtidude of target area.
@@ -474,11 +472,13 @@ $(document).ready(function () {
         }
     });
 
+
     /*-------------------------\
     | ON CLICK FOR RESTART BTN |
     \-------------------------*/
     $('#restart').on('click', function (event) {
         showSignin();
+        // Hide restart button again.
         $(this).css('opacity', 0);
     });
     
@@ -525,10 +525,12 @@ $(document).ready(function () {
 
     // When the user clicks outside of the modal, close modal.
     window.onclick = function (event) {
+        // This trick allows storing jQuery selector as javascript would.
         var modal = $('#trailModal')[0];
-        // console.log(modal);
-        // console.log(event.target);
+        console.log(modal);
+        console.log(event.target);
         // Consider: $(event.target)
+
         if (event.target == modal) {
         // modal.style.display = 'none';
         $('#trailModal').hide();
@@ -541,7 +543,6 @@ $(document).ready(function () {
         setTimeout(() => window.open($(this).attr('href')), 1000);
     })    
         
-    
 
     /*--------\
     | ON LOAD |
