@@ -3,12 +3,12 @@
 \---------------------*/
 .jumbotron {
     text-align: center;
-    background-color:whitesmoke;
-    color: black;
+    background:rgb(223, 198, 73);
+    color: rgb(63, 51, 39);
     font-family: 'Staatliches', cursive;
     border-radius: 0;
     padding: 1%;
-    background-image: linear-gradient(51deg, lightgreen, transparent 29%, transparent 73%, transparent 1%, green);
+    background-image: linear-gradient(0deg, rgb(253, 248, 225) 100%, transparent);
 }
 
 .col-lg-12 {
@@ -41,7 +41,7 @@ h4 {
 }
 
 .background {
-    background-image: url("https://i0.wp.com/www.nwimed.com/wp-content/uploads/2017/02/Forrest-Road.jpg");
+    background-image: url("https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fcdn-image.travelandleisure.com%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1600x1000%2Fpublic%2F1541087358%2Fcouple-hiking-with-scenic-view-HIKINGSTUFF1118.jpg%3Fitok%3DPgYlAryV&q=85");
     background-size: cover;
     z-index: 0;
     position: fixed;
@@ -87,15 +87,28 @@ h4 {
     color:mediumblue;
 }
 .card-wrapper {
-    background: rgb(93, 230, 93); /* The Fallback */
-    background: rgba(93, 230, 93, 0.85);
-    background-image: linear-gradient(65deg, yellow 8%, transparent);
-    border: 2px solid black; 
+    background: rgb(222, 225, 210); /* The Fallback */
+    background: rgba(1, 138, 237 0.85);
+    background-image: linear-gradient(129deg, rgb(229, 195, 180) 8%, transparent);
+    border: 2px solid rgb(65, 95, 99);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 30px;
     box-sizing: border-box;
-    color: black;
+    color: rgb(43, 29, 66);
+    font-family: 'Lexend Giga', sans-serif;
+}
+
+.card-wrapperTrail {
+    background: rgb(255, 255, 255); /* The Fallback */
+    background: rgba(1, 138, 237 0.85);
+    background-image: linear-gradient(129deg, rgb(255, 255, 255) 8%, transparent);
+    border: 2px solid rgb(65, 95, 99);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+    color: rgb(43, 29, 66);
     font-family: 'Lexend Giga', sans-serif;
 }
 
@@ -124,7 +137,7 @@ h4 {
 }
 
 .weatherCont {
-    margin: 0;
+    margin: 3px;
     padding: 0;
 }
 
@@ -138,15 +151,19 @@ h4 {
 }
 
 .hotTemp {
-    background-color: crimson;
+    background-color:rgb(83, 17, 19);
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
 }
 
 .coldTemp {
-    background-color: rgb(127, 220, 255);
+    background-color: rgb(20, 21, 24);
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .hourWrapper {
-    margin-top: 10px;
     /* divider line */
     border-top: 1px solid black;    
 }
@@ -155,6 +172,13 @@ h4 {
     text-align: center;
     display: flex;
     justify-content: space-between;
+}
+
+.rainyWeather {
+    background-color:rgb(86, 111, 151);
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
 }
 .condNIcon {
     text-align: center;
