@@ -36,34 +36,12 @@ $(document).ready(function () {
     var holdFilterHours = [];
     var dataForUse = [];
 
-    // For popularity tracking in modal.
-    var likeCounter = 0;
-    var dislikeCounter = 0;
-
 
     // DOM Connections //
     const signIn =  document.querySelector('#sign-in');
     const jumboContainer = document.querySelector("#jumboCont");
     const jumboContent = document.querySelector("#jumbotron");
     const infoContainer = document.querySelector('#infoCont');
-
-
-    // Firebase configuration
-    var firebaseConfig = {
-        apiKey: "AIzaSyDKCCyMyN9zvULKn39PO9R_c2jYXF96SUs",
-        authDomain: "uta-cb-project-1.firebaseapp.com",
-        databaseURL: "https://uta-cb-project-1.firebaseio.com",
-        projectId: "uta-cb-project-1",
-        storageBucket: "",
-        messagingSenderId: "562769266637",
-        appId: "1:562769266637:web:273f52edb364aaf2"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    
-    // Create a variable to reference the database
-    var database = firebase.database();
 
 
     /*------------\
@@ -86,7 +64,6 @@ $(document).ready(function () {
     }
     
     // Call this to update date input's max date. 
-    // ***** Redundant if validating after input ***** //
     function updateMaxDate(today) {
         console.log("Updating max date input...");
         $('#date').attr('max', moment().add('5', 'days').format('YYYY-MM-DD'));
@@ -100,117 +77,6 @@ $(document).ready(function () {
           x.innerHTML = "Geolocation is not supported by this browser.";
         }
     }
-
-    // // Call this to get user's current location
-    // function showPosition(position) {
-    //     x.innerHTML = "Latitude: " + position.coords.latitude + 
-    //     "<br>Longitude: " + position.coords.longitude; 
-    // };
-
-// one time
-//     return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-//         var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-
-
-    // This callback keeps the page updated when a value changes in firebase.
-    function listenerDB(trailId) {
-        var refOne = database.ref('trails/' + trailId);
-        refOne.on(
-            "value",
-            function(snapshot) {
-                // Use Firebase method to determine whether DataSnapshot is null.
-                if (snapshot.exists()) {
-                    console.log(snapshot);
-                    console.log('Value from db: '+ snapshot.val());
-
-                    nestedLike(refOne);
-                }
-
-                    // // Change the value of our likeCounter to match the value in the database
-                    // if (refOne.child('likeCount').exists()) {
-                    //     console.log('DB shows like count of ' + snapshot.likeCount.val());
-                    //     likeCounter = snapshot.likeCount.val();
-                    // } else { 
-                    //     likeCounter = 0;
-                    // }
-                    // $("#likeDisplay").text(likeCounter);
-
-                    // if (refOne.child('dislikeCount').exists()) {
-                    //     console.log('DB shows dislike count of ' + snapshot.dislikeCount.val());
-                    //     dislikeCounter = snapshot.dislikeCount.val();
-                    // } else {
-                    //     dislikeCounter = 0;
-                    // }
-                    // $("#dislikeDisplay").text(dislikeCounter);
-
-                    // // Console Log the value of the Counters after update.
-                    // console.log('Like count is now:' + likeCounter);
-                    // console.log('Dislike count is now: ' + dislikeCounter);
-                    
-                    // Update DB variables if not initiated.
-                    database.ref('trails/' + trailId).set({
-                        likeCount: likeCounter,
-                        dislikeCount: dislikeCounter
-                    })
-
-                // } else {
-                //     console.log('Target Snapshot is null...');
-                // }
-
-                // Change the HTML using jQuery to reflect the updated Counter value
-                
-                
-                // Alternate solution to the above line
-                // $("#click-value").html(clickCounter);
-                // debugger;
-                
-              // If any errors are experienced, log them to console.
-            // },
-            // function(errorObject) {
-            //   console.log("The read failed: " + errorObject.code);
-            // }
-        });
-    }
-
-    function nestedLike(likePath) {
-        var refTwo = database.ref(likePath + '/likeCount');
-        refTwo.on(
-            "value",
-            function(snapshot) {
-                if (snapshot.exists()) {
-                    console.log(snapshot);
-                    console.log('Value from db: '+ snapshot.val());
-                    nestedLike(refOne);
-                } else {
-                    likeCounter = 0;
-                }
-
-            }
-        )
-    }
-
-    // Save new value to Firebase
-    function updateDB(trailId, choice) {
-        if (choice === 'like') {
-            likeCounter++;
-            database.ref('trails/' + trailId).set({
-                likeCount: likeCounter,
-                dislikeCount: dislikeCounter
-            })
-        }
-        else if (choice === 'dislike') {
-            dislikeCounter++;
-            database.ref('trails/' + trailId).set({
-                likeCount: likeCounter,
-                dislikeCount: dislikeCounter
-            })
-        }
-        else {
-            console.log("You shouldn't see this ever.");
-        }
-    }
-
-
 
     // AJAX call to Google Maps Javascript API's geocoder class to get latitude & longitude based on State and City.
     function queryGeocode() {
@@ -408,6 +274,8 @@ $(document).ready(function () {
 
     // Make AJAX call to Find Bike Trails endpoint to import 
     function queryTrail() {
+        $('#trailList').empty();
+
         console.log('Trail API received latitude of: ' + lat);
         console.log('Trail API received longitude of: ' + lon);
         console.log('');
@@ -423,9 +291,7 @@ $(document).ready(function () {
                 "x-rapidapi-key": "cfbae3bd13msh660a849870aa5cap194a7fjsnd973bfb99523"
             }
         }).then(function (response) {
-            //testing var data = response.data;
-            // trailsData = data;
-
+            // Store response as variable for later use.
             trailsData = response.data;
             data = trailsData;
 
@@ -434,58 +300,49 @@ $(document).ready(function () {
             console.log('Response length: ' + data.length);
             console.log('Type: '+ typeof data);
             console.log('');
-
-
-            // ***** ADD A FUNCTION THAT STORES AJAX RESPONSE IN AN OBJECT. ***** //
-            // THIS CAN ALSO REDUCE AJAX CALLS IF WE ALLOW USER TO REQUEST SORT/FILTER CHANGES.
-
             if ( typeof response === 'null' ) {
-                //trailsData.length === 0 does not work
-                //!$.trim(response) doesn't work directly
                 console.log('Trail API Promise returned null');
-                debugger;
-                //showSignin();  not yet working.
             } else {
-                //debugger;
                 for (let j = 0; j < data.length; j++) {
                     // Output data to console.
-                    console.log('Object key: ' + j);
-                    console.log("State: " + data[j].region);
-                    console.log('Description: ' + data[j].description);
-                    console.log('Difficulty: ' + data[j].difficulty);
-                    console.log('Singletracks ID: ' + data[j].id);
-                    console.log('Trail name: ' + data[j].name);
-                    console.log('Length in miles: ' + data[j].length);
-                    console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
-                    console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
-    
-                    // Error-check for blank thumbnail URL.
-                    if (data[j].thumbnail === "") {
-                        console.log('Thumbnail is considered blank...');
-                        data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
-                    } else {console.log('Thumbnail looks normal.')};
-                    //debugger;
-                    // Singletracks.com has Trail widget if higher res pic is needed, but may need to show other info.
-                    console.log('Profile page: ' + data[j].url); // URL to profile page.
-                    console.log(' ');
-
+                    // console.log('Object key: ' + j);
+                    // console.log("State: " + data[j].region);
+                    // console.log('Description: ' + data[j].description);
+                    // console.log('Difficulty: ' + data[j].difficulty);
+                    // console.log('Singletracks ID: ' + data[j].id);
+                    // console.log('Trail name: ' + data[j].name);
+                    // console.log('Length in miles: ' + data[j].length);
+                    // console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
+                    // console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
+                    //
+                    // // Error-check for blank thumbnail URL.
+                    // if (data[j].thumbnail === "") {
+                    //     console.log('Thumbnail is considered blank...');
+                    //     data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
+                    // } else {console.log('Thumbnail looks normal.')};
+                    //
+                    // console.log('Profile page: ' + data[j].url); // URL to profile page.
+                    // console.log(' ');
+                    //
                     // At this point, all AJAX calls succeeded. Prevent additional input.
                     hideSignin();
     
                     // Call render function and pass trail data.
                     renderCard(j, data[j].name, data[j].thumbnail, data[j].rating, data[j].length);
                 }
+                
             }
-
+            
         })
         .catch(function(error) {
             console.log(error);
         }) // End of AJAX call to Trail API.
+        $('#restart').css('opacity', 1);
     } // End of function.
 
     
     // RENDER FUNCTION //
-    // Take reorganized data and output to display.
+    // Organized data and output to display.
 
     // Call this to render trail cards.
     function renderCard(ke, na, th, ra, le) {
@@ -513,51 +370,30 @@ $(document).ready(function () {
     \--------------------------*/
 
     function showSignin() {
-    // Sign in box animation
-    // $("#sign-in").animate(
-    //     // FIRST ARG CSS PROPS
-    //     {
-    //         opacity: 1,
-    //         top: '0px'
-    //     },
-    //     // SECOND ARG TIME (MS)
-    //     700);
-        
-    //     $(".jumbotron").animate({
-    //         opacity: 1,
-    //         top: '0px'
-    //     },1000);
-
         // For reset
         $('#infoCont').hide();
-        jumboContainer.style.display.block;
-        //let node = document.getElementById('jumbotron');        
-        //jumbotron.removeEventListener('animationend', 'slideInDown')
-
+        $('#jumboCont').show();
         $('#spacer').show();
         
-        // Animate.CSS
+        // Animate.CSS to reveal jumbotron and signin elements.
         signIn.classList.add('animated', 'slideInUp');
-        jumbotron.classList.add('animated', 'slideInDown');
-        //jumbotron.classList.add('animated', 'fast')
+        signIn.addEventListener('animationend', function() {
+            $('#spacer').show();
+            // AnimateCSS: remove any if present.
+            signIn.classList.remove('animated', 'slideInUp')
+        });
 
-        // WILL NEED RESET FOR INFOCONTAINER IF ALLOWING RESET.
-        //        infoContainer.classList.add('animated', 'animateContentIn');
+        jumbotron.classList.add('animated', 'slideInDown');
+        jumbotron.addEventListener('animationend', function() {
+            $('#jumboCont').show();
+            // AnimateCSS: remove any if present.
+            jumbotron.classList.remove('animated', 'slideInDown')
+        });        
     }
 
     function hideSignin() {
-        // Animating with jQuery
-        // $("#sign-in").animate({
-        //     opacity: 0,
-        //     top: '1000px'
-        // },2000);
 
-        // $(".jumbotron").animate({
-        //     opacity: 0,
-        //     bottom: '10000px'
-        // },1000)
-
-        // Animate.CSS
+        // Animate.CSS to hide jumbotron and signin elements.
         signIn.classList.add('animated', 'slideOutDown');
         signIn.addEventListener('animationend', function() {
             $('#spacer').hide();
@@ -569,27 +405,34 @@ $(document).ready(function () {
             $('#jumboCont').hide();
             // AnimateCSS: remove any if present.
             jumbotron.classList.remove('animated', 'slideOutUp');
-            //jumbotron.classList.remove('animated', 'fast');
          });
 
+         // Animate.CSS to reveal results elements.
          $('#infoCont').show();
          infoContainer.classList.add('animated', 'fadeIn');
+         infoContainer.addEventListener('animationend', function() {
+            // AnimateCSS: remove any if present.
+            infoContainer.classList.remove('animated', 'fadeIn');
+         });
 
+        // // If we were animating with jQuery:
+        // $("#sign-in").animate({
+        //     opacity: 0,
+        //     top: '1000px'
+        // },2000);
+
+        // $(".jumbotron").animate({
+        //     opacity: 0,
+        //     bottom: '10000px'
+        // },1000)
     }
 
-
-    // Optional: STORAGE FUNCTION //
-    // Optional: Allow saving/tracking of multiple query data.
-    // Optional: Get/set some query data in database for persistence/tracking.
-    
 
     //End of Functions -----------------------------------------        
 
 
 
     // DATA ENTRY EVENT HANDLERS //
-    // Optional: Consider taking info such as intended activity/purpose.
-
     // This function handles events where the Submit button is clicked.
     /*------------------------\
     | ON CLICK FOR SEARCH BTN |
@@ -634,8 +477,16 @@ $(document).ready(function () {
         }
         
     });
+
+    /*-------------------------\
+    | ON CLICK FOR RESTART BTN |
+    \-------------------------*/
+    $('#restart').on('click', function (event) {
+        showSignin();
+        $(this).css('opacity', 0);
+    });
     
-    
+
     /*-----------------------\
     | ON CLICK OF TRAIL CARD |
     \-----------------------*/
@@ -654,47 +505,27 @@ $(document).ready(function () {
         $('#trailContent').empty();
         
         let thumb = $('<img>').attr('src', modalData.thumbnail).addClass('trailImg img-thumbnail');
-        let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
+        //let site = $('<a>').attr('href', modalData.url).attr('id', 'imgLink').append(thumb);
+        let site = $('<a>').attr('href', modalData.url).addClass('imgLink').append(thumb);
         let siteId = $('<p>').text('SINGLETRACK ID: ' + trailsData[id]['id']);
         let name = $('<h3>').text(modalData.name);
 
-        // Capitalize first letter if not already.
+        // Capitalize first letter of difficulty.
         let diffText = modalData.difficulty.replace(/^\w/, c => c.toUpperCase());
+
         let diff = $('<p>').text('DIFFICULTY: ' + diffText);
         let desc = $('<p>').text('DESCRIPTION: ' + modalData.description);
         let dir = $('<p>').text('DIRECTIONS: ' + modalData.directions);
-
-        // Like button.
-        let like = $('<img>').addClass('like').attr({src:'./assets/images/likeIcon.png'});
-        let likeDisp = $('<div>').attr('id', 'likeDisplay').text('');
-        let likeBtn = $('<a>').addClass('popularityBtn').append(like, likeDisp);//.attr('href')
-
-        // Dislike button.
-        let dislikeDisp = $('<div>').attr('id', 'dislikeDisplay').text('');
-        let dislike = $('<img>').addClass('dislike').attr('src', './assets/images/dislikeIcon.png');
-        let dislikeBtn = $('<a>').addClass('popularityBtn').append(dislike, dislikeDisp);//.attr('href')
-
-        // Like/Dislike counter displays.
-        let popularity = $('<div>').addClass('popularity').attr('id', trailsData[id]['id']).append(likeBtn, dislikeBtn);
-
-        // Initialize listener for this trail's table in db.
-        listenerDB(trailsData[id]['id']);
+        let url = $('<a>').attr('href', modalData.url).addClass('imgLink').text('LEARN MORE');
 
         // Construct and display the trail modal.
-        $('#trailContent').append(site, name, siteId, diff, desc, dir, popularity);
+        $('#trailContent').append(site, name, siteId, diff, desc, dir, url);
         $('#trailModal').show();
 
         // Animate.CSS on modal.
         const animateModal =  document.querySelector('#trailModal');
         animateModal.classList.add('animated', 'slideInDown');
         animateModal.classList.add('animated', 'faster');
-    });
-
-    // Updating like/dislike counters if clicked.
-    $(document.body).on('click', '.popularityBtn', function (event) {
-        let singletrackId = $(this).parent().attr('id');
-        let action = $(this).children().attr('class');
-        updateDB(singletrackId, action);
     });
 
     // When the user clicks outside of the modal, close modal.
@@ -710,16 +541,16 @@ $(document).ready(function () {
     }
 
     // When thumbnail is pressed, apply small delay then open link in new window.
-    $(document).on('click', '#imgLink', function (event) {
+    $(document).on('click', '.imgLink', function (event) {
         event.preventDefault();
         setTimeout(() => window.open($(this).attr('href')), 1000);
     })    
         
     
+
     /*--------\
     | ON LOAD |
     \--------*/
-
     updateDate();
     showSignin();
 
