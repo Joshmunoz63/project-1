@@ -21,6 +21,7 @@ $(document).ready(function () {
     var threePM;
     var sixPM;
 
+    var today;
     var day1;
     var day2;
     var day3;
@@ -50,14 +51,14 @@ $(document).ready(function () {
 
     // Call this to update date input with today's date.
     function updateDate() {
-        console.log("Updating date input with today...");
+        // console.log("Updating date input with today...");
 
         let now = new Date();
 
         let day = ("0" + now.getDate()).slice(-2);
         let month = ("0" + (now.getMonth() + 1)).slice(-2);
 
-        let today = now.getFullYear()+"-"+(month)+"-"+(day);
+        today = now.getFullYear()+"-"+(month)+"-"+(day);
         $('#date').val(today).attr('placeholder', moment().format('MM/DD/YYYY'));
 
     //        updateMaxDate(today);
@@ -129,6 +130,9 @@ $(document).ready(function () {
             crossDomain: true,
         }).then(function (openWeatherAPICall) {
             savedarray = openWeatherAPICall.list;
+
+            console.log(savedarray);
+
             saveData(savedarray);
         })
         .catch(function(error) {
@@ -137,32 +141,32 @@ $(document).ready(function () {
     }
 
 
-    function saveData() {
+    // function saveData() {
+    function saveData(savedarray) {
+        // For reset
+        // $('#weatherInfo').empty();
+
         sixAM = savedarray.filter(function (savedarray) {
             return savedarray.dt_txt.includes("06:00:00");
         });
         nineAM = savedarray.filter(function (savedarray) {
             return savedarray.dt_txt.includes("09:00:00");
         });
-
         twelvePM = savedarray.filter(function (savedarray) {
             return savedarray.dt_txt.includes("12:00:00");
         });
-
         threePM = savedarray.filter(function (savedarray) {
             return savedarray.dt_txt.includes("15:00:00");
         });
-
         sixPM = savedarray.filter(function (savedarray) {
             return savedarray.dt_txt.includes("18:00:00");
         });
-
         holdFilterHours = sixAM.concat(nineAM, twelvePM, threePM, sixPM);
         filterDays(holdFilterHours);
     }
 
     function filterDays(holdFilterHours) {
-        day1 = moment(day1).add(1, "days").format("YYYY-MM-DD");
+        day1 = moment(today).add(1, "days").format("YYYY-MM-DD");
         day2 = moment(day1).add(1, "days").format("YYYY-MM-DD");
         day3 = moment(day2).add(1, "days").format("YYYY-MM-DD");
         day4 = moment(day3).add(1, "days").format("YYYY-MM-DD");
@@ -195,9 +199,6 @@ $(document).ready(function () {
         dataForUse.push(day5Forcast);
         console.log(dataForUse);
 
-        // For reset
-        $('#weatherInfo').empty();
-
         for (var U = 0; U < 5; U++) {
             var dayOFWeek = moment(dataForUse[U][0].dt_txt);
             dayOFWeek = moment(dayOFWeek).format("dddd");
@@ -211,17 +212,16 @@ $(document).ready(function () {
 
     function weatherRender(dataForUse, U, dayOFWeek, dayOFWeekH3) {
 
-        //var cardCont = $('<div>').addClass('container card-container col-lg-2 col-md-4 col-sm-12 weatherCont');
         var cardCont = $('<div>').addClass('container card-container col-lg-auto col-md-4 col-sm-12 weatherCont');
         var cardWrap = $('<div>').addClass('card-wrapper').attr('id', dayOFWeek);
         
 
         for (var Y = 0; Y < dataForUse[U].length; Y++) {
             console.log(dataForUse[U][Y].dt_txt);
-            console.log(dataForUse[U][Y].main.temp);
-            console.log(dataForUse[U][Y].main.temp_max);
-            console.log(dataForUse[U][Y].main.temp_min);
-            console.log(dataForUse[U][Y].weather[0].main);
+            // console.log(dataForUse[U][Y].main.temp);
+            // console.log(dataForUse[U][Y].main.temp_max);
+            // console.log(dataForUse[U][Y].main.temp_min);
+            // console.log(dataForUse[U][Y].weather[0].main);
 
             // Truncate digits past decimal.
             dataForUse[U][Y].main.temp = dataForUse[U][Y].main.temp.toString().split('.')[0];
@@ -303,15 +303,15 @@ $(document).ready(function () {
             } else {
                 for (let j = 0; j < data.length; j++) {
                     // Output data to console.
-                    console.log('Object key: ' + j);
-                    console.log("State: " + data[j].region);
-                    console.log('Description: ' + data[j].description);
-                    console.log('Difficulty: ' + data[j].difficulty);
-                    console.log('Singletracks ID: ' + data[j].id);
-                    console.log('Trail name: ' + data[j].name);
-                    console.log('Length in miles: ' + data[j].length);
-                    console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
-                    console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
+                    // console.log('Object key: ' + j);
+                    // console.log("State: " + data[j].region);
+                    // console.log('Description: ' + data[j].description);
+                    // console.log('Difficulty: ' + data[j].difficulty);
+                    // console.log('Singletracks ID: ' + data[j].id);
+                    // console.log('Trail name: ' + data[j].name);
+                    // console.log('Length in miles: ' + data[j].length);
+                    // console.log('5-point rating: ' + data[j].rating); // Is 0 if no review exists.
+                    // console.log('Thumbnail: ' + data[j].thumbnail); // URL to low-res thumbnail.
                     
                     // Error-check for blank thumbnail URL.
                     if (data[j].thumbnail === "") {
@@ -319,8 +319,8 @@ $(document).ready(function () {
                         data[j].thumbnail ='https://images.singletracks.com/graphics/no_photo_750x500.png'
                     } else {console.log('Thumbnail looks normal.')};
                     
-                    console.log('Profile page: ' + data[j].url); // URL to profile page.
-                    console.log(' ');
+                    // console.log('Profile page: ' + data[j].url); // URL to profile page.
+                    // console.log(' ');
                     
                     // At this point, all AJAX calls succeeded. Prevent additional input.
                     hideSignin();
@@ -483,8 +483,18 @@ $(document).ready(function () {
     \-------------------------*/
     $('#restart').on('click', function (event) {
         showSignin();
+        
+        $('#weatherInfo').empty();
+
+        // reset data holders
+        savedarray = {};
+        dataForUse = [];
+        holdFilterHours = [];
+        lat, lot = 0;
+
         // Hide restart button again.
         $(this).css('opacity', 0);
+
     });
     
 
@@ -500,7 +510,7 @@ $(document).ready(function () {
         let id = $(this).attr('id');
 
         let modalData = trailsData[id];
-        console.log(modalData);
+        // console.log(modalData);
 
         // Reset moving parts.
         $('#trailContent').empty();
@@ -537,8 +547,8 @@ $(document).ready(function () {
     window.onclick = function (event) {
         // This trick allows storing jQuery selector as javascript would.
         var modal = $('#trailModal')[0];
-        console.log(modal);
-        console.log(event.target);
+        // console.log(modal);
+        // console.log(event.target);
         // Consider: $(event.target)
 
         if (event.target == modal) {
